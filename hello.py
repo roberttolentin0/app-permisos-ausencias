@@ -1,3 +1,4 @@
+# Ejemplo de script de Flask
 from flask import Flask
 from flask import url_for
 from flask import request
