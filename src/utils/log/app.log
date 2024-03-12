@@ -1,93 +1,198 @@
-2024-03-12 12:04:11 | ERROR | connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
-connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
+2024-03-12 16:31:48 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 16:31:48 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:04:11 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\database\db_postgres.py", line 20, in get_connection
-    conn = psycopg2.connect(**conn_params)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-psycopg2.OperationalError: connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
-connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
+2024-03-12 16:35:47 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 16:35:47 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
+2024-03-12 16:35:52 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 16:35:52 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:04:11 | ERROR | 'NoneType' object has no attribute 'cursor'
-2024-03-12 12:04:11 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:04:11 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
+2024-03-12 16:36:40 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 16:36:40 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
--------------------------------------------------------------
-2024-03-12 12:05:08 | ERROR | connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
-connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
+2024-03-12 17:09:40 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:09:40 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 55, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:05:08 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\database\db_postgres.py", line 20, in get_connection
-    conn = psycopg2.connect(**conn_params)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-psycopg2.OperationalError: connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
-connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
-	Is the server running on that host and accepting TCP/IP connections?
+2024-03-12 17:10:09 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:10:09 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 55, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
+2024-03-12 17:14:01 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:14:01 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 55, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:05:08 | ERROR | 'NoneType' object has no attribute 'cursor'
-2024-03-12 12:05:08 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:05:08 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
+2024-03-12 17:14:33 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:14:33 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:14:21 | ERROR | Permission.__init__() missing 7 required positional arguments: 'permission_date', 'start_time', 'end_time', 'reason', 'status', 'observation', and 'validator_id'
-2024-03-12 12:14:21 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:14:21 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
+2024-03-12 17:14:35 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:14:35 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:15:07 | ERROR | Permission.__init__() missing 7 required positional arguments: 'permission_date', 'start_time', 'end_time', 'reason', 'status', 'observation', and 'validator_id'
-2024-03-12 12:15:07 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:15:07 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 17, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
+2024-03-12 17:14:37 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:14:37 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
-2024-03-12 12:15:25 | ERROR | Permission.__init__() missing 7 required positional arguments: 'permission_date', 'start_time', 'end_time', 'reason', 'status', 'observation', and 'validator_id'
-2024-03-12 12:15:25 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:15:25 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 17, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
-
-2024-03-12 12:17:06 | ERROR | Permission.__init__() takes 9 positional arguments but 10 were given
-2024-03-12 12:17:06 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:17:06 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 17, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
-
-2024-03-12 12:20:30 | ERROR | Permission.__init__() missing 1 required positional argument: 'validator_id'
-2024-03-12 12:20:30 | ERROR | object of type 'NoneType' has no len()
-2024-03-12 12:20:30 | ERROR | Traceback (most recent call last):
-  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
-    if (len(permissions) > 0):
-        ^^^^^^^^^^^^^^^^
-TypeError: object of type 'NoneType' has no len()
+2024-03-12 17:20:58 | ERROR | 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
+2024-03-12 17:20:58 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 54, in create_permission
+    dni = request.json['dni']
+          ^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 558, in json
+    return self.get_json()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 604, in get_json
+    return self.on_json_loading_failed(None)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\flask\wrappers.py", line 131, in on_json_loading_failed
+    return super().on_json_loading_failed(e)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\werkzeug\wrappers\request.py", line 647, in on_json_loading_failed
+    raise UnsupportedMediaType(
+werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
