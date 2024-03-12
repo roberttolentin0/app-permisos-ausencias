@@ -8,7 +8,8 @@ def create_app():
     locale.setlocale(locale.LC_ALL, 'es_ES')
 
     # Registrar vistas
-    from app import home
+    from src import home
+    from src.routes import PermissionRoutes
     app.register_blueprint(home.bp)
-
+    app.register_blueprint(PermissionRoutes.bp)
     return app
