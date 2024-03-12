@@ -1,0 +1,93 @@
+2024-03-12 12:04:11 | ERROR | connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2024-03-12 12:04:11 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\database\db_postgres.py", line 20, in get_connection
+    conn = psycopg2.connect(**conn_params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+2024-03-12 12:04:11 | ERROR | 'NoneType' object has no attribute 'cursor'
+2024-03-12 12:04:11 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:04:11 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+-------------------------------------------------------------
+2024-03-12 12:05:08 | ERROR | connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+2024-03-12 12:05:08 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\database\db_postgres.py", line 20, in get_connection
+    conn = psycopg2.connect(**conn_params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\.venv\Lib\site-packages\psycopg2\__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5433 failed: Connection refused (0x0000274D/10061)
+	Is the server running on that host and accepting TCP/IP connections?
+
+
+2024-03-12 12:05:08 | ERROR | 'NoneType' object has no attribute 'cursor'
+2024-03-12 12:05:08 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:05:08 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+2024-03-12 12:14:21 | ERROR | Permission.__init__() missing 7 required positional arguments: 'permission_date', 'start_time', 'end_time', 'reason', 'status', 'observation', and 'validator_id'
+2024-03-12 12:14:21 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:14:21 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+2024-03-12 12:15:07 | ERROR | Permission.__init__() missing 7 required positional arguments: 'permission_date', 'start_time', 'end_time', 'reason', 'status', 'observation', and 'validator_id'
+2024-03-12 12:15:07 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:15:07 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 17, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+2024-03-12 12:15:25 | ERROR | Permission.__init__() missing 7 required positional arguments: 'permission_date', 'start_time', 'end_time', 'reason', 'status', 'observation', and 'validator_id'
+2024-03-12 12:15:25 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:15:25 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 17, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+2024-03-12 12:17:06 | ERROR | Permission.__init__() takes 9 positional arguments but 10 were given
+2024-03-12 12:17:06 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:17:06 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 17, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
+2024-03-12 12:20:30 | ERROR | Permission.__init__() missing 1 required positional argument: 'validator_id'
+2024-03-12 12:20:30 | ERROR | object of type 'NoneType' has no len()
+2024-03-12 12:20:30 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\routes\PermissionRoutes.py", line 16, in index
+    if (len(permissions) > 0):
+        ^^^^^^^^^^^^^^^^
+TypeError: object of type 'NoneType' has no len()
+
