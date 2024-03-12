@@ -2,12 +2,12 @@ class Permission():
     def __init__(self, id, dni, permission_date, start_time, end_time, reason, status, observation, validator_id) -> None:
         self.id = id
         self.dni = dni
-        self.permission_date = permission_date,
-        self.start_time = start_time,
-        self.end_time = end_time,
-        self.reason = reason,
-        self.status = status,
-        self.observation = observation,
+        self.permission_date = permission_date
+        self.start_time = start_time
+        self.end_time = end_time
+        self.reason = reason
+        self.status = status
+        self.observation = observation
         self.validator_id = validator_id
 
     def to_json(self):

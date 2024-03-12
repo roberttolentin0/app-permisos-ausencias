@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+    <div>
+        <h1>Solicitar permiso</h1>
+        <form method="POST" action="/permisos/crear_permiso">
+            <label for="dni">Solicitante:</label>
+            <input type="text" class="" id="dni" name="dni" placeholder="DNI" required maxlength="8" onkeyup="handleInputDni()"/>
+            <p id="name"></p>
+            <button type="submit" onclick="crearSolicitud()">Solicitar</button>
+        </form>
+    </div>
+    <script>
+        function crearSolicitud() {
+            alert('crear solictud')
+            // fetch
+        }
+
+        function handleInputDni() {
+          const valueDni = document.getElementById("dni").value;
+          // Aquí se coloca la lógica para verificar el valor
+          // ...
+          // var resultado = "El valor es válido"; // Ejemplo
+          // document.getElementById("resultado").innerHTML = resultado;
+          console.log('Consultar al back si existe ese DNI', valueDni)
+          if (valueDni.length == 8) {
+            // Consultar al back si existe ese DNI
+            getName()
+          } else {
+            document.getElementById("name").innerHTML = ''
+          }
+
+        }
+        async function getName() {
+            const url = 'http://127.0.0.1:5000/name/47'
+            let response = await fetch(url);
+            console.log('response', response)
+            if (response.ok) { // si el HTTP-status es 200-299
+                // obtener cuerpo de la respuesta (método debajo)
+                let json = await response.json();
+                console.log('json', json)
+                document.getElementById("name").innerHTML = json.name
+            } else {
+                alert("Error-HTTP: " + response.status);
+            }
+        }
+
+    </script>
+</main>
+{% endblock %}

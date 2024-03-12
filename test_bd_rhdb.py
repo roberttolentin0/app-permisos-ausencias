@@ -18,7 +18,7 @@ try:
     print("Conexión exitosa a la base de datos PostgreSQL")
     # Aquí puedes realizar operaciones en la base de datos utilizando la conexión 'conn'
     cur = conn.cursor()
-    cur.execute("select dni from employee")
+    cur.execute("select dni, fullname, lastname, surname, cellphone, email, salary from employee")
     # Retrieve query results
     records = cur.fetchall()
     print('records', records)
@@ -52,3 +52,4 @@ except psycopg2.Error as e:
 # #     conn.close()  # No olvides cerrar la conexión cuando hayas terminado
 # # except psycopg2.Error as e:
 # #     print("Error al conectar a la base de datos PostgreSQL:", e)
+
