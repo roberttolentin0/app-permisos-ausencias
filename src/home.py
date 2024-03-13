@@ -2,10 +2,9 @@ from flask import Blueprint, render_template, request
 
 bp = Blueprint('home', __name__)
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/')
 def index():
-    print('go index home')
-    return render_template('index.html')
+    return render_template('create_permission.html')
 
 @bp.route("/name/<string:dni>")
 def get_name(dni):
