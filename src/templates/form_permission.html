@@ -9,7 +9,7 @@
       </h2>
     </div>
     <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <form id='formPermiso' class="space-y-6">
         <div>
           <label
             for="email"
@@ -85,14 +85,14 @@
         </div>
         <div>
           <label
-            for="Motivo"
+            for="motivo"
             class="block text-sm font-medium leading-6 text-gray-900"
             >Motivo</label
           >
           <div class="mt-2">
             <textarea
-              id="Motivo"
-              name="Motivo"
+              id="motivo"
+              name="motivo"
               rows="3"
               class="px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               required
@@ -112,25 +112,27 @@
       </form>
     </div>
   </div>
-  <div>
-    <h1>Solicitar permiso</h1>
-    <form method="POST" action="/permisos/crear_permiso">
-      <label for="dni">Solicitante:</label>
-      <input
-        type="text"
-        class=""
-        id="dni"
-        name="dni"
-        placeholder="DNI"
-        required
-        maxlength="8"
-        onkeyup="handleInputDni()"
-      />
-      <p id="name"></p>
-      <button type="submit" onclick="crearSolicitud()">Solicitar</button>
-    </form>
-  </div>
   <script>
+    const form = document.getElementById('formPermiso');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            // console.log('formData', formData)
+            fetch('http://127.0.0.1:5000/permisos/crear_permiso', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                alert('Se creo la solicitud')
+                window.location.href = '/permisos/'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        });
+
     function handleInputDni() {
       const valueDni = document.getElementById("dni").value;
       // Aquí se coloca la lógica para verificar el valor
