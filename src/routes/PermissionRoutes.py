@@ -23,7 +23,7 @@ def index():
     except Exception as ex:
         Logger.add_to_log("error", str(ex))
         Logger.add_to_log("error", traceback.format_exc())
-    return render_template('index.html')
+    return render_template('table.html')
 
 @bp.route('/<int:id>', methods=['GET'])
 def get_permission(id):
