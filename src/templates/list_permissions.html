@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section>
+    <table>
+        <thead>
+            <th>id</th>
+            <th>Fecha</th>
+            <th>DNI</th>
+            <th>Hora Salida</th>
+            <th>Hora Retorno</th>
+            <th>Motivo</th>
+            <th>Observación</th>
+            <th>Estado</th>
+            <th>Opciones</th>
+        </thead>
+        <tbody>
+            {% for permission in permissions | reverse %}
+                <tr>
+                    <td>{{permission.id}}</td>
+                    <td>{{permission.permission_date}}</td>
+                    <td>{{permission.dni}}</td>
+                    <td>{{permission.start_time}}</td>
+                    <td>{{permission.end_time}}</td>
+                    <td>{{permission.reason}}</td>
+                    <td>{{permission.observation}}</td>
+                    <td>{{permission.status}}</td>
+                    <td> < | X</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+    </script>
+</section>
+{% endblock %}

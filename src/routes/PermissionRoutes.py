@@ -11,15 +11,15 @@ from src.services.PermissionService import PermissionService
 
 bp = Blueprint('permission_blueprint', __name__)
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/', methods=['GET'])
 def index():
+    permissions = []
     try:
         permissions = PermissionService.get_permisssions()
         if (len(permissions) > 0):
              print('go index permisos', permissions)
         else:
             Exception('No hay permisos')
-            # return jsonify({'message': "NOTFOUND", 'success': True})
     except Exception as ex:
         Logger.add_to_log("error", str(ex))
         Logger.add_to_log("error", traceback.format_exc())
@@ -38,40 +38,36 @@ def get_permission(id):
         Logger.add_to_log("error", traceback.format_exc())
     return permission
 
-@bp.route('/crear')
-def view_create_permission():
-    print('Request for add restaurant page received')
-    return render_template('create_permission.html')
-
 @bp.route('/crear_permiso', methods=['POST'])
 def create_permission():
-    print('Crear permiso')
+    print('Crear permiso', request.form)
     try:
         if request.method == 'POST':
-            # name = request.values.get('restaurant_name')
             dni = request.form['dni']
             print('dni_form', dni)
-            dni = request.json['dni']
-            print('dni_json:', dni)
-            permission_date = request.json['permission_date']
-            start_time = request.json['start_time']
-            end_time = request.json['end_time']
-            reason = request.json['reason']
-            status = request.json['status']
-            observation = request.json['observation']
+            permission_date = request.form['fecha']
+            start_time = request.form['hora_salida']
+            end_time = request.form['hora_retorno']
+            reason = request.form['motivo']
+            status = 'PENDIENTE'
+            observation = ''
             validator_id = '1' # request.json['validator_id']
-            return jsonify({'success': True, 'status': 200})
+            permission = Permission(None, dni, permission_date, start_time, end_time, reason, status, observation, validator_id)
+            affected_rows = PermissionService.create_permission(permission=permission)
+            if affected_rows == 1:
+                return jsonify({'message': 'success', 'data': {'dni': permission.dni}}), 200
+            else:
+                return jsonify({'message': "Error on insert"}), 500
     except Exception as e:
         Logger.add_to_log("error", str(e))
         Logger.add_to_log("error", traceback.format_exc())
-        flash('Invalid password provided', 'error')
-
-    return render_template('create_permission.html')
+        return jsonify({'message': str(e)}), 500
 
 @bp.route('/update_permission', methods=['POST'])
 def update_permission():
     try:
         print('Actualizar permiso')
+        return jsonify({'message': 'success', 'data': {}}), 200
     except Exception as e:
         Logger.add_to_log("error", str(e))
         Logger.add_to_log("error", traceback.format_exc())
