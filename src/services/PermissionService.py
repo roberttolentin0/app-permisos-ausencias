@@ -1,5 +1,6 @@
 import traceback
-
+from datetime import time
+from datetime import datetime
 # Database
 from src.database.db_postgres import get_connection
 # Logger
@@ -17,7 +18,7 @@ class PermissionService():
             permissions = []
             with connection.cursor() as cursor:
                 query = """
-                            SELECT id, dni, permission_date, start_time, end_time, reason, status, observation, validator_id, create_at, update_at
+                            SELECT id, dni, permission_date, start_time, end_time, reason, status, observation, validator_id, created_at, updated_at
                             FROM public.permissions p
                         """
                 cursor.execute(query)
@@ -73,23 +74,28 @@ class PermissionService():
         except Exception as e:
             Logger.add_to_log("error", str(e))
             Logger.add_to_log("error", traceback.format_exc())
-            
-    def create_permission(cls, data):
+
+    @classmethod
+    def create_permission(cls, permission):
+        print('create_permission', permission.to_json())
         try:
             connection = get_connection()
-            permission = None
             with connection.cursor() as cursor:
-                # query = f"""
-                #             INSERT INTO permissions (employee_id, start_time, end_time)
-                #             VALUES (%s, %s, %s)",
-                #         """
-                # cursor.execute(query)
-                # cursor.execute("INSERT INTO permissions (employee_id, start_time, end_time) VALUES (%s, %s, %s)",
-                # (data['employee_id'], data['start_time'], data['end_time']))
-                # connection.commit()
-                cursor.close()
+                start_time= datetime.strptime(permission.start_time, "%H:%M").time()
+                end_time= datetime.strptime(permission.end_time, "%H:%M").time()
+                cursor.execute("""INSERT INTO permissions
+                                (dni, permission_date, start_time, end_time, reason, status, observation, validator_id, created_at)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                                (permission.dni,
+                                 permission.permission_date,
+                                 start_time,
+                                 end_time,
+                                 permission.reason,
+                                 permission.status, permission.observation, permission.validator_id, datetime.now()))
+                affected_rows = cursor.rowcount
+                connection.commit()
             connection.close()
-            return permission.to_json()
+            return affected_rows
         except Exception as e:
             Logger.add_to_log("error", str(e))
             Logger.add_to_log("error", traceback.format_exc())
