@@ -3,8 +3,8 @@ from datetime import time
 from datetime import datetime
 # Database
 from src.database.db_postgres import get_connection
-# Logger
 from src.utils.Logger import Logger
+from src.utils.DateFormat import DateFormat
 # Models
 from src.models.PermissionModel import Permission
 
@@ -28,9 +28,9 @@ class PermissionService():
                     permission = Permission(
                         int(row[0]),
                         row[1],
-                        row[2],
-                        row[3],
-                        row[4],
+                        DateFormat.convert_date(row[2]),
+                        DateFormat.convert_time(row[3]),
+                        DateFormat.convert_time(row[4]),
                         row[5],
                         row[6],
                         row[7],
