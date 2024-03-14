@@ -1,12 +1,13 @@
 import traceback
-from datetime import time
 from datetime import datetime
 # Database
-from src.database.db_postgres import get_connection
+from src.database.db_postgres import PGConnection
 from src.utils.Logger import Logger
 from src.utils.DateFormat import DateFormat
 # Models
 from src.models.PermissionModel import Permission
+
+connectionDB = PGConnection()
 
 
 class PermissionService():
@@ -14,7 +15,7 @@ class PermissionService():
     @classmethod
     def get_permisssions(cls):
         try:
-            connection = get_connection()
+            connection = connectionDB.connect()
             permissions = []
             with connection.cursor() as cursor:
                 query = """
@@ -37,16 +38,16 @@ class PermissionService():
                         row[8]
                     )
                     permissions.append(permission.to_json())
-            connection.close()
+            connectionDB.close()
             return permissions
         except Exception as e:
             Logger.add_to_log("error", str(e))
-            # Logger.add_to_log("error", traceback.format_exc())
+            Logger.add_to_log("error", traceback.format_exc())
 
     @classmethod
     def get_permisssion(cls, id):
         try:
-            connection = get_connection()
+            connection = connectionDB.connect()
             permission = None
             with connection.cursor() as cursor:
                 query = f"""
@@ -69,7 +70,7 @@ class PermissionService():
                         row[7],
                         row[8]
                     )
-            connection.close()
+            connectionDB.close()
             return permission.to_json()
         except Exception as e:
             Logger.add_to_log("error", str(e))
@@ -79,7 +80,7 @@ class PermissionService():
     def create_permission(cls, permission):
         print('create_permission', permission.to_json())
         try:
-            connection = get_connection()
+            connection = connectionDB.connect()
             with connection.cursor() as cursor:
                 start_time= datetime.strptime(permission.start_time, "%H:%M").time()
                 end_time= datetime.strptime(permission.end_time, "%H:%M").time()
@@ -94,7 +95,7 @@ class PermissionService():
                                  permission.status, permission.observation, permission.validator_id, datetime.now()))
                 affected_rows = cursor.rowcount
                 connection.commit()
-            connection.close()
+            connectionDB.close()
             return affected_rows
         except Exception as e:
             Logger.add_to_log("error", str(e))
