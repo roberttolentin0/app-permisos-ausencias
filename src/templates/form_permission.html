@@ -118,7 +118,9 @@
     const form = document.getElementById('formPermiso');
         form.addEventListener('submit', (event) => {
             event.preventDefault();
+            const nameText = document.getElementById("name").textContent.trim();
             const formData = new FormData(form);
+            formData.append('full_name', nameText)
             // console.log('formData', formData)
             fetch('http://127.0.0.1:5000/permisos/crear_permiso', {
                 method: 'POST',
