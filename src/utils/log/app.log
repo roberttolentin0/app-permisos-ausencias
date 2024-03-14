@@ -196,3 +196,11 @@ werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not at
     raise UnsupportedMediaType(
 werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'.
 
+2024-03-13 22:46:37 | ERROR | el valor es demasiado largo para el tipo character varying(60)
+
+2024-03-13 22:46:37 | ERROR | Traceback (most recent call last):
+  File "D:\Terranova\proyectos\App control de permisos\src\services\PermissionService.py", line 86, in create_permission
+    cursor.execute("""INSERT INTO permissions
+psycopg2.errors.StringDataRightTruncation: el valor es demasiado largo para el tipo character varying(60)
+
+
