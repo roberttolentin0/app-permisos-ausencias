@@ -19,24 +19,25 @@ class PermissionService():
             permissions = []
             with connection.cursor() as cursor:
                 query = """
-                            SELECT id, dni, permission_date, start_time, return_time, end_time, reason, status, observation, validator_id, created_at, updated_at
+                            SELECT id, dni, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at, updated_at, end_time
                             FROM public.permissions p
                         """
                 cursor.execute(query)
                 resultset = cursor.fetchall()
                 for row in resultset:
-                    end_time = DateFormat.convert_time(row[5]) if row[5] is not None else '00:00'
+                    print('row', row)
+                    end_time = DateFormat.convert_time(row[9]) if row[9] is not None else '00:00'
                     permission = Permission(
                         int(row[0]),
                         row[1],
                         DateFormat.convert_date(row[2]),
                         DateFormat.convert_time(row[3]),
                         DateFormat.convert_time(row[4]),
-                        end_time,
+                        row[5],
                         row[6],
                         row[7],
                         row[8],
-                        row[9]
+                        end_time,
                     )
                     permissions.append(permission.to_json())
             connectionDB.close()
@@ -84,16 +85,19 @@ class PermissionService():
             connection = connectionDB.connect()
             with connection.cursor() as cursor:
                 start_time= datetime.strptime(permission.start_time, "%H:%M").time()
-                end_time= datetime.strptime(permission.end_time, "%H:%M").time()
+                return_time= datetime.strptime(permission.return_time, "%H:%M").time()
                 cursor.execute("""INSERT INTO permissions
-                                (dni, permission_date, start_time, end_time, reason, status, observation, validator_id, created_at)
+                                (dni, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at)
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                                 (permission.dni,
                                  permission.permission_date,
                                  start_time,
-                                 end_time,
+                                 return_time,
                                  permission.reason,
-                                 permission.status, permission.observation, permission.validator_id, datetime.now()))
+                                 permission.status,
+                                 permission.observation,
+                                 permission.validator_id,
+                                 datetime.now()))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connectionDB.close()

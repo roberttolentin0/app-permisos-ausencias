@@ -50,7 +50,7 @@ def create_permission():
             print('dni_form', dni)
             permission_date = request.form['fecha']
             start_time = request.form['hora_salida']
-            end_time = request.form['hora_retorno']
+            return_time = request.form['hora_retorno']
             reason = request.form['motivo']
             status = 'PENDIENTE'
             observation = ''
@@ -63,7 +63,7 @@ def create_permission():
                 Logger.add_to_log("error", str(e))
                 Logger.add_to_log("error", traceback.format_exc())
             # Create permission
-            permission = Permission(None, dni, permission_date, start_time, end_time, reason, status, observation, validator_id)
+            permission = Permission(None, dni, permission_date, start_time, return_time, reason, status, observation, validator_id)
             affected_rows = PermissionService.create_permission(permission=permission)
             if affected_rows == 1:
                 return jsonify({'message': 'success', 'data': {'dni': permission.dni}}), 200
