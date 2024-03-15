@@ -1,36 +1,427 @@
 {% extends 'base.html' %}
+{% block head %}
+	<!--Regular Datatables CSS-->
+	<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+	<!--Responsive Extension Datatables CSS-->
+	<link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
+
+	<style>
+		/*Overrides for Tailwind CSS */
+
+		/*Form fields*/
+		.dataTables_wrapper select,
+		.dataTables_wrapper .dataTables_filter input {
+			color: #4a5568;
+			/*text-gray-700*/
+			padding-left: 1rem;
+			/*pl-4*/
+			padding-right: 1rem;
+			/*pl-4*/
+			padding-top: .5rem;
+			/*pl-2*/
+			padding-bottom: .5rem;
+			/*pl-2*/
+			line-height: 1.25;
+			/*leading-tight*/
+			border-width: 2px;
+			/*border-2*/
+			border-radius: .25rem;
+			border-color: #edf2f7;
+			/*border-gray-200*/
+			background-color: #edf2f7;
+			/*bg-gray-200*/
+		}
+
+		/*Row Hover*/
+		table.dataTable.hover tbody tr:hover,
+		table.dataTable.display tbody tr:hover {
+			background-color: #ebf4ff;
+			/*bg-indigo-100*/
+		}
+
+		/*Pagination Buttons*/
+		.dataTables_wrapper .dataTables_paginate .paginate_button {
+			font-weight: 700;
+			/*font-bold*/
+			border-radius: .25rem;
+			/*rounded*/
+			border: 1px solid transparent;
+			/*border border-transparent*/
+		}
+
+		/*Pagination Buttons - Current selected */
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+			color: #fff !important;
+			/*text-white*/
+			box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+			/*shadow*/
+			font-weight: 700;
+			/*font-bold*/
+			border-radius: .25rem;
+			/*rounded*/
+			background: #667eea !important;
+			/*bg-indigo-500*/
+			border: 1px solid transparent;
+			/*border border-transparent*/
+		}
+
+		/*Pagination Buttons - Hover */
+		.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+			color: #fff !important;
+			/*text-white*/
+			box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+			/*shadow*/
+			font-weight: 700;
+			/*font-bold*/
+			border-radius: .25rem;
+			/*rounded*/
+			background: #667eea !important;
+			/*bg-indigo-500*/
+			border: 1px solid transparent;
+			/*border border-transparent*/
+		}
+
+		/*Add padding to bottom border */
+		table.dataTable.no-footer {
+			border-bottom: 1px solid #e2e8f0;
+			/*border-b-1 border-gray-300*/
+			margin-top: 0.75em;
+			margin-bottom: 0.75em;
+		}
+
+		/*Change colour of responsive icon*/
+		table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+		table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+			background-color: #667eea !important;
+			/*bg-indigo-500*/
+		}
+		/* Estilos personalizados para las celdas td del DataTables */
+		#tablaPermisos.dataTable td {
+            text-align: center; /* Alineación del texto */
+        }
+	</style>
+{% endblock %}
 
 {% block content %}
-<section>
-    <table>
-        <thead>
-            <th>id</th>
-            <th>Fecha</th>
-            <th>DNI</th>
-            <th>Hora Salida</th>
-            <th>Hora Retorno</th>
-            <th>Motivo</th>
-            <th>Observación</th>
-            <th>Estado</th>
-            <th>Opciones</th>
-        </thead>
-        <tbody>
-            {% for permission in permissions | reverse %}
-                <tr>
-                    <td>{{permission.id}}</td>
-                    <td>{{permission.permission_date}}</td>
-                    <td>{{permission.dni}}</td>
-                    <td>{{permission.start_time}}</td>
-                    <td>{{permission.end_time}}</td>
-                    <td>{{permission.reason}}</td>
-                    <td>{{permission.observation}}</td>
-                    <td>{{permission.status}}</td>
-                    <td> < | X</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <script>
-    </script>
-</section>
+	<!--Container-->
+	<div class="container w-full md:w-4/5 xl:w-4/5  mx-auto px-5">
+		<!--Card-->
+		<div id='recipients' class="p-3 mt-6 lg:mt-0 rounded shadow bg-white">
+			<div class="flex gap-2">
+				<p class="text-blue-400 py-1 flex">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+					<span class="pl-1">Extender</span>
+				</p>
+				<p class="text-orange-400 py-1 flex">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+					<span class="pl-1">Extendido</span>
+				</p>
+			</div>
+
+			<table id="tablaPermisos" class="stripe hover text-sm" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+				<thead>
+					<tr>
+						<th data-priority="1">ID</th>
+						<th data-priority="2">Fecha</th>
+						<th data-priority="3">Solicitante</th>
+						<th data-priority="4">Hora Salida</th>
+						<th data-priority="5">Hora Retorno</th>
+						<th data-priority="6" style="min-width: 300px;">Motivo</th>
+                        <th data-priority="8">Estado</th>
+                        <th data-priority="9">Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+				<!--<tbody>
+					{% for permission in permissions %}
+					<tr>
+						<td>{{permission.id}}</td>
+						<td>{{permission.permission_date}}</td>
+						<td>{{permission.dni}}</td>
+						<td>{{permission.start_time}}</td>
+						<td>{{permission.end_time}}</td>
+						<td>{{permission.reason}}</td>
+						<td>{{permission.status}} <span id="aceptaSpan" class="px-2 py-1 text-white rounded">
+
+						</span> </td>
+						<td> < | X</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+					-->
+			</table>
+
+            <!-- INIT Modal Test -->
+			<button class="btn" onclick="my_modal_1.showModal()">open modal</button>
+			<!-- Ejemplo dialog para usar el modal https://play.tailwindcss.com/IIWW8U8Zeq -->
+			<dialog id="my_modal_1" class="relative z-10 modal" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+			
+				<!-- Diseño con div: https://tailwindui.com/components/application-ui/overlays/dialogs -->
+			<!-- <div id="my_modal_1" class="relative z-10 modal" aria-labelledby="modal-title" role="dialog" aria-modal="true"> -->
+				<!--
+				  Background backdrop, show/hide based on modal state.
+				  Entering: "ease-out duration-300"
+					From: "opacity-0"
+					To: "opacity-100"
+				  Leaving: "ease-in duration-200"
+					From: "opacity-100"
+					To: "opacity-0"
+				-->
+				<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+				<div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+				  <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+					<!--
+					  Modal panel, show/hide based on modal state.
+					  Entering: "ease-out duration-300"
+						From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+						To: "opacity-100 translate-y-0 sm:scale-100"
+					  Leaving: "ease-in duration-200"
+						From: "opacity-100 translate-y-0 sm:scale-100"
+						To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+					-->
+					<div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+					  <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+						<div class="sm:flex sm:items-start">
+						  <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+							<svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+							  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+							</svg>
+						  </div>
+						  <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+							<h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Deactivate account</h3>
+							<div class="mt-2">
+							  <p class="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone.</p>
+							</div>
+						  </div>
+						</div>
+					  </div>
+					  <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+						<button type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
+						<button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
+						<!-- Ejemplo dialog para usar el modal -->
+						<form method="dialog" class="modal-box">
+							<p class="py-4">Press ESC key or click the button below to close</p>
+							<div class="modal-action">
+							  <button class="btn">Close</button>
+							</div>
+						</form>
+					  </div>
+					</div>
+				  </div>
+				</div>
+			</dialog>
+          <!-- END Modal -->
+		</div>
+	</div>
+	<!--/container-->
+	<script>
+	</script>
+{% endblock %}
+{% block script %}
+<!--Datatables -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script>
+	// Accede a los datos de Flask pasados a la plantilla HTML utilizando Jinja2
+	var permissions = {{ permissions|tojson|safe }};
+	console.log('permissions', permissions)
+	$(document).ready(function() {
+		var tablaPermisos = $('#tablaPermisos').DataTable({
+			responsive: true,
+			"order": [[ 0, "desc" ]]
+		})
+		  .columns.adjust()
+		  .responsive.recalc();
+
+		  // Agregar las filas a la tabla DataTables
+		  permissions.forEach(function(permission) {
+			tablaPermisos.row.add([
+				permission.id,
+				permission.permission_date,
+				permission.dni,
+				permission.start_time,
+				permission.end_time,
+				permission.reason,
+				renderRowStatus(permission.status),
+				renderRowOptions(permission.id, permission.status)
+			]).draw();
+		});
+	});
+
+	function renderRowStatus(status){
+		const colorStatus = {
+			'PENDIENTE': 'bg-gray-300',
+			'ACEPTADO': 'bg-gradient-to-r from-emerald-300 to-emerald-500',
+			'RECHAZADO': 'bg-red-400',
+			'EXTENDIDO': 'bg-gradient-to-r from-yellow-300 to-orange-400',
+			'FINALIZADO': 'bg-gradient-to-r from-cyan-300 to-blue-400',
+		}
+		return `<span class='text-xs px-2 py-1 text-white rounded ${colorStatus[status]}'>${status}</span>`
+	}
+	function renderRowOptions(id, status){
+		const buttonAceptar = `
+			<button onclick="aceptar(${id})" class="bg-indigo-0 text-white py-1"">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </button>
+		`
+		const buttonExtender = `
+			<button  onclick="extender(${id})" class="py-1"">
+				<!-- Permitido -->
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </button>
+		`
+		const buttonRechazado = `
+			<button onclick="rechazar(${id})" class="bg-red-0 text-white py-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line></svg>
+            </button>
+		`
+		const buttonEliminar = `
+			<button onclick="eliminar(${id})" class="bg-red-0 text-white py-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+		`
+		const buttonPlus = `
+			<button onclick="extender(${id})" class="bg-red-0 text-white py-1">
+                <svg height="25" width="25" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M9 12H15" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M12 9L12 15" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+				<path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#323232" stroke-width="2"/>
+				</svg>
+            </button>
+		`
+		const buttonExtendido = `
+			<button onclick="aceptar(${id})" class="bg-blue-0 text-white py-1"">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </button>
+		`
+		const buttonFinalizado = `
+			<button class="py-1"">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </button>
+		`
+		const showButtonsByStatus = () => {
+			switch (status) {
+				case 'PENDIENTE':
+					return `${buttonAceptar}${buttonEliminar}`;
+				case 'ACEPTADO':
+					return buttonExtender;
+				case 'EXTENDIDO':
+					return buttonExtendido;
+				default:
+					return '';
+			}
+		}
+
+		return `
+        <div class="flex justify-evenly gap-2">
+            ${showButtonsByStatus()}
+        </div>
+		`
+	}
+
+	function aceptar(id) {
+		// Lógica para aceptar el elemento con el ID proporcionado
+		Swal.fire({
+			title: '¿Aceptas el permiso?',
+			showDenyButton: true,
+			showCancelButton: true,
+			icon: 'question',
+			confirmButtonText: "Aceptar",
+			denyButtonText: `Rechazar`
+		}).then((result) => {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+				// Acción para aceptar
+				Swal.fire("Aceptado!", "", "success");
+			} else if (result.isDenied) {
+				rechazar('1')
+				// (async () => {
+				// 	const { value: text } = await Swal.fire({
+				// 		input: "textarea",
+				// 		inputLabel: "Rechazar",
+				// 		inputPlaceholder: "Motivo de rechazo.",
+				// 		inputAttributes: {
+				// 			"aria-label": "Type your message here"
+				// 		},
+				// 		showCancelButton: true,
+				// 		confirmButtonText: "Rechazar",
+				// 	});
+				// 	if (text) {
+				// 		// Accion para rechazar
+				// 		Swal.fire(text);
+				// 	}
+				// 	})()
+			}
+		});
+	}
+
+    async function rechazar(id) {
+		// Lógica para rechazar el elemento con el ID proporcionado
+					const { value: text } = await Swal.fire({
+						input: "textarea",
+						inputLabel: "Rechazar",
+						inputPlaceholder: "Motivo de rechazo.",
+						inputAttributes: {
+							"aria-label": "Type your message here"
+						},
+						showCancelButton: true,
+						confirmButtonText: "Rechazar",
+					});
+					if (text) {
+						// Accion para rechazar
+						Swal.fire(text);
+					}
+	}
+
+	function eliminar(id) {
+		// Lógica para eliminar el elemento con el ID proporcionado
+		console.log("Eliminar ID:", id);
+	}
+
+	function extender(id) {
+		// Lógica para Extender el elemento con el ID proporcionado
+		console.log("Extender ID:", id);
+		Swal.fire({
+			title: "¿Solicitar extensión tiempo?",
+			text: "Nuevo tiempo de retorno",
+			input: "time",
+			inputAttributes: {
+				autocapitalize: "off"
+			},
+			showCancelButton: true,
+			confirmButtonText: "Solicitar",
+			showLoaderOnConfirm: true,
+			preConfirm: (valueText) => {
+				try {
+					console.log('valueText', valueText)
+				// const githubUrl = `
+				// 	https://api.github.com/users/${login}
+				// `;
+				// const response = await fetch(githubUrl);
+				// if (!response.ok) {
+				// 	return Swal.showValidationMessage(`
+				// 	${JSON.stringify(await response.json())}
+				// 	`);
+				// }
+				// return response.json();
+				} catch (error) {
+				Swal.showValidationMessage(`
+					Request failed: ${error}
+				`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+			}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire({
+				title: `${result.value.login}'s avatar`,
+				imageUrl: result.value.avatar_url
+				});
+			}
+			});
+	}
+
+</script>
 {% endblock %}

@@ -6,8 +6,10 @@ from flask import Blueprint, render_template, request, jsonify, flash
 from src.utils.Logger import Logger
 # Models
 from src.models.PermissionModel import Permission
+from src.models.EmployeeModel import Employee
 # Services
 from src.services.PermissionService import PermissionService
+from src.services.EmployeeService import EmployeeService
 
 bp = Blueprint('permission_blueprint', __name__)
 
@@ -23,7 +25,6 @@ def index():
     except Exception as ex:
         Logger.add_to_log("error", str(ex))
         Logger.add_to_log("error", traceback.format_exc())
-
     return render_template('list_permissions.html', permissions = permissions)
 
 @bp.route('/<int:id>', methods=['GET'])
@@ -45,6 +46,7 @@ def create_permission():
     try:
         if request.method == 'POST':
             dni = request.form['dni']
+            full_name = request.form['full_name']
             print('dni_form', dni)
             permission_date = request.form['fecha']
             start_time = request.form['hora_salida']
@@ -53,6 +55,14 @@ def create_permission():
             status = 'PENDIENTE'
             observation = ''
             validator_id = '1' # request.json['validator_id']
+            # Create Employee
+            try:
+                employee = Employee(dni, full_name)
+                affected_rows = EmployeeService.create_employee(employee=employee)
+            except Exception as e:
+                Logger.add_to_log("error", str(e))
+                Logger.add_to_log("error", traceback.format_exc())
+            # Create permission
             permission = Permission(None, dni, permission_date, start_time, end_time, reason, status, observation, validator_id)
             affected_rows = PermissionService.create_permission(permission=permission)
             if affected_rows == 1:
