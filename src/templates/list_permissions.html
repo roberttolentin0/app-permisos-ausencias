@@ -130,30 +130,14 @@
 						<th data-priority="3">Solicitante</th>
 						<th data-priority="4">Hora Salida</th>
 						<th data-priority="5">Hora Retorno</th>
-						<th data-priority="6" style="min-width: 300px;">Motivo</th>
+						<th data-priority="6">Hora Ingreso</th>
+						<th data-priority="7" style="min-width: 300px;">Motivo</th>
                         <th data-priority="8">Estado</th>
                         <th data-priority="9">Opciones</th>
 					</tr>
 				</thead>
 				<tbody>
 				</tbody>
-				<!--<tbody>
-					{% for permission in permissions %}
-					<tr>
-						<td>{{permission.id}}</td>
-						<td>{{permission.permission_date}}</td>
-						<td>{{permission.dni}}</td>
-						<td>{{permission.start_time}}</td>
-						<td>{{permission.end_time}}</td>
-						<td>{{permission.reason}}</td>
-						<td>{{permission.status}} <span id="aceptaSpan" class="px-2 py-1 text-white rounded">
-
-						</span> </td>
-						<td> < | X</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-					-->
 			</table>
 		</div>
 	</div>
@@ -182,6 +166,7 @@
 				permission.permission_date,
 				permission.dni,
 				permission.start_time,
+				permission.return_time,
 				permission.end_time,
 				permission.reason,
 				renderRowStatus(permission.status),
@@ -193,9 +178,9 @@
 	function renderRowStatus(status){
 		const colorStatus = {
 			'PENDIENTE': 'bg-gray-300',
-			'ACEPTADO': 'bg-gradient-to-r from-emerald-300 to-emerald-500',
+			'ACEPTADO': 'bg-gradient-to-r from-teal-300 to-teal-400',
 			'RECHAZADO': 'bg-red-400',
-			'EXTENDIDO': 'bg-gradient-to-r from-yellow-300 to-orange-400',
+			'EXTENDIDO': 'bg-gradient-to-r from-yellow-300 to-orange-300',
 			'FINALIZADO': 'bg-gradient-to-r from-cyan-300 to-blue-300',
 		}
 		return `<span class='text-xs px-2 py-1 text-white rounded ${colorStatus[status]}'>${status}</span>`
@@ -211,7 +196,8 @@
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </button>
 		`
-		const buttonRechazado = `
+		// Not used hay la opcion de rechazar en el modal de aceptar
+		const buttonRechazar= `
 			<button onclick="rechazar(${id})" class="bg-red-0 text-white py-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line></svg>
             </button>
@@ -252,7 +238,6 @@
 	}
 
 	function aceptar(id) {
-		// Lógica para aceptar el elemento con el ID proporcionado
 		Swal.fire({
 			title: '¿Aceptas el permiso?',
 			showDenyButton: true,
@@ -261,13 +246,12 @@
 			confirmButtonText: "Aceptar",
 			denyButtonText: `Rechazar`
 		}).then((result) => {
-			/* Read more about isConfirmed, isDenied below */
 			if (result.isConfirmed) {
-				// Acción para aceptar
-				Swal.fire("Aceptado!", "", "success");
+				aceptarPermiso(id)
 			} else if (result.isDenied) {
-				rechazar('1')
-				// (async () => {
+				rechazar(id)
+				/* Async - await anonimo
+				(async () => {
 				// 	const { value: text } = await Swal.fire({
 				// 		input: "textarea",
 				// 		inputLabel: "Rechazar",
@@ -282,27 +266,103 @@
 				// 		// Accion para rechazar
 				// 		Swal.fire(text);
 				// 	}
-				// 	})()
+				// 	})()*/
 			}
 		});
 	}
 
     async function rechazar(id) {
 		// Lógica para rechazar el elemento con el ID proporcionado
-					const { value: text } = await Swal.fire({
-						input: "textarea",
-						inputLabel: "Rechazar",
-						inputPlaceholder: "Motivo de rechazo.",
-						inputAttributes: {
-							"aria-label": "Type your message here"
-						},
-						showCancelButton: true,
-						confirmButtonText: "Rechazar",
-					});
-					if (text) {
-						// Accion para rechazar
-						Swal.fire(text);
-					}
+		const { value: text } = await Swal.fire({
+			input: "textarea",
+			inputLabel: "Rechazar",
+			inputPlaceholder: "Motivo de rechazo...",
+			inputAttributes: {
+				"aria-label": "Type your message here"
+			},
+			showCancelButton: true,
+			confirmButtonText: "Rechazar",
+		});
+		if (text) {
+			// Accion para rechazar
+			rechazarPermiso(id, text)
+		}
+	}
+
+	function aceptarPermiso(id) {
+		console.log('aceptar permiso')
+		data = {
+					id,
+					action: 'aceptar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+                method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				Swal.fire("Aceptado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Aceptado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+	}
+
+	function rechazarPermiso(id, rejectionReason) {
+		console.log('Rechazar permiso')
+		data = {
+					id,
+					rejection_reason: rejectionReason,
+					action: 'rechazar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+                method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "warning",
+                title: "Salida Rechazada"
+              }).then(() => window.location.href = '/permisos/');
+            })
+            .catch(error => {
+                console.error(error);
+            });
 	}
 
 	function eliminar(id) {

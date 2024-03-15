@@ -1,9 +1,10 @@
 class Permission():
-    def __init__(self, id, dni, permission_date, start_time, end_time, reason, status, observation, validator_id) -> None:
+    def __init__(self, id, dni, permission_date, start_time, return_time, end_time, reason, status, observation, validator_id) -> None:
         self.id = id
         self.dni = dni
         self.permission_date = permission_date
         self.start_time = start_time
+        self.return_time = return_time
         self.end_time = end_time
         self.reason = reason
         self.status = status
@@ -16,6 +17,7 @@ class Permission():
             'dni': self.dni,
             'permission_date': self.permission_date,
             'start_time': self.start_time,
+            'return_time': self.return_time,
             'end_time': self.end_time,
             'reason': self.reason,
             'status': self.status,
