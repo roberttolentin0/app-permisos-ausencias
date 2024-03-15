@@ -3,18 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App permisos y ausencias - {% block title %}{% endblock %}</title>
-
+    <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
     {% block head %}
     {% endblock %}
 </head>
 <body>
-    <nav>
-        <div><a href="{{ url_for('home.index')}}">Nueva solicitud</a></div>
-        <div><a href="{{ url_for('permission_blueprint.index')}}">Ver Solicitudes</a></div>
-    </nav>
+    <!-- Sección Cabecera -->
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm pt-10 pb-5">
+        <div class="mb-1">
+          <h1 class="text-center text-2xl font-bold text-indigo-900">
+            APP PERMISOS Y AUSENCIAS
+          </h1>
+        </div>
+        <br />
+        <div class="flex gap-2 px-6">
+            <a
+                type="submit"
+                class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                href="{{url_for('home.index')}}"
+                >
+                Nuevo
+            </a>
+            <a
+                type="submit"
+                class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                href="{{ url_for('permission_blueprint.index') }}"
+                >
+                Solicitudes
+            </a>
+        </div>
+    </div>
     <!-- Sección de bloque de contenido -->
-    {% block content %}
-    {% endblock %}
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
+<!-- sweetalert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
+ <!-- jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+{% block script %}
+{% endblock %}
 </html>
