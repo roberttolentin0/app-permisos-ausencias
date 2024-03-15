@@ -114,6 +114,8 @@
       </form>
     </div>
   </div>
+  <!-- sweetalert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
   <script>
     const form = document.getElementById('formPermiso');
         form.addEventListener('submit', (event) => {
@@ -129,8 +131,21 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                alert('Se creo la solicitud')
-                window.location.href = '/permisos/'
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso solicitado"
+              }).then(() => window.location.href = '/permisos/');
             })
             .catch(error => {
                 console.error(error);
