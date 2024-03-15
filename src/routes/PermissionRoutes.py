@@ -77,8 +77,35 @@ def create_permission():
 @bp.route('/update_permission', methods=['POST'])
 def update_permission():
     try:
-        print('Actualizar permiso')
-        return jsonify({'message': 'success', 'data': {}}), 200
+        print('Actualizar permiso', request)
+        data = request.json
+        # print('data', data)
+        id = data['id']
+        action = data['action']
+        affected_rows = None
+
+        if action == 'aceptar':
+            affected_rows = PermissionService.update_status_permission(id=id, status='ACEPTADO')
+        elif action == 'rechazar':
+            rejection_reason = data['rejection_reason']
+            affected_rows = PermissionService.update_status_permission(id=id, status='RECHAZADO', observation=rejection_reason)
+        elif action == 'extender':
+            affected_rows = PermissionService.update_status_permission(id=id, status='EXTENDIDO')
+            print('Extender Permiso')
+
+        if affected_rows == 1:
+            return jsonify({'message': 'success'}), 200
+        else:
+            return jsonify({'message': "Error on update"}), 500
     except Exception as e:
         Logger.add_to_log("error", str(e))
         Logger.add_to_log("error", traceback.format_exc())
+
+# @bp.route('/accept_permission', methods=['POST'])
+# def accept_permission():
+#     try:
+#         print('Actualizar permiso, estado aceptado')
+#         return jsonify({'message': 'success', 'data': {}}), 200
+#     except Exception as e:
+#         Logger.add_to_log("error", str(e))
+#         Logger.add_to_log("error", traceback.format_exc())

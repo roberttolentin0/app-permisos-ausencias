@@ -19,23 +19,24 @@ class PermissionService():
             permissions = []
             with connection.cursor() as cursor:
                 query = """
-                            SELECT id, dni, permission_date, start_time, end_time, reason, status, observation, validator_id, created_at, updated_at
+                            SELECT id, dni, permission_date, start_time, return_time, end_time, reason, status, observation, validator_id, created_at, updated_at
                             FROM public.permissions p
                         """
                 cursor.execute(query)
                 resultset = cursor.fetchall()
                 for row in resultset:
-                    # print('row', row)
+                    end_time = DateFormat.convert_time(row[5]) if row[5] is not None else '00:00'
                     permission = Permission(
                         int(row[0]),
                         row[1],
                         DateFormat.convert_date(row[2]),
                         DateFormat.convert_time(row[3]),
                         DateFormat.convert_time(row[4]),
-                        row[5],
+                        end_time,
                         row[6],
                         row[7],
-                        row[8]
+                        row[8],
+                        row[9]
                     )
                     permissions.append(permission.to_json())
             connectionDB.close()
@@ -93,6 +94,33 @@ class PermissionService():
                                  end_time,
                                  permission.reason,
                                  permission.status, permission.observation, permission.validator_id, datetime.now()))
+                affected_rows = cursor.rowcount
+                connection.commit()
+            connectionDB.close()
+            return affected_rows
+        except Exception as e:
+            Logger.add_to_log("error", str(e))
+            Logger.add_to_log("error", traceback.format_exc())
+
+    @classmethod
+    def update_status_permission(cls, id, status, observation = None):
+        print('accept_permission')
+        try:
+            connection = connectionDB.connect()
+            with connection.cursor() as cursor:
+                if observation is not None:
+                    print('rechazar')
+                    cursor.execute("""UPDATE public.permissions
+                                        SET status=%s, observation=%s, validator_id='1', updated_at=%s
+                                        WHERE id = %s;
+                                """,(status, observation, datetime.now(), id))
+                else:
+                    print('aceptar')
+                    cursor.execute("""UPDATE public.permissions
+                                    SET status=%s, validator_id='1', updated_at=%s
+                                    WHERE id = %s;
+                                """,(status, datetime.now(), id))
+
                 affected_rows = cursor.rowcount
                 connection.commit()
             connectionDB.close()
