@@ -9,31 +9,31 @@
       </h2>
     </div>
     <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form id='formPermiso' class="space-y-6">
-        <div>
-          <label
-            for="email"
-            class="block text-sm font-medium leading-6 text-gray-900"
-            >DNI:</label
-          >
-          <div class="mt-2">
-            <input
-              id="dni"
-              name="dni"
-              type="text"
-              autocomplete="dni"
-              placeholder="DNI"
-              required
-              maxlength="8"
-              class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              onkeyup="handleInputDni()"
-              />
-              <span id="name" class="text-xs font-medium text-green-500 dark:text-green-300 pl-2">
-                ...
-              </span>
-          </div>
+      <div>
+        <label
+          for="email"
+          class="block text-sm font-medium leading-6 text-gray-900"
+          >DNI:</label
+        >
+        <div class="mt-2">
+          <input
+            id="dni"
+            name="dni"
+            type="text"
+            autocomplete="dni"
+            placeholder="DNI"
+            required
+            maxlength="8"
+            class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            onkeyup="handleInputDni()"
+            />
+            <span id="name" class="text-xs font-medium text-green-500 dark:text-green-300 pl-2">
+              ...
+            </span>
         </div>
-        <div id="formPermisoDetalle" class="space-y-2 hidden">
+      </div>
+      <form id='formPermiso' class="space-y-6 hidden">
+        <div class="space-y-2">
           <div>
             <label
               for="fecha"
@@ -104,6 +104,7 @@
   
           <div>
             <button
+              id="buttonSolicitar"
               type="submit"
               class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onclick="crearSolicitud()"
@@ -112,16 +113,81 @@
             </button>
           </div>
         </div>
-
+      </form>
+      <form id='formPermisoPendiente' class="space-y-6 hidden">
+        <div class="space-y-2">
+          <div>
+            <label
+              for="fecha"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >fecha:</label
+            >
+            <div class="mt-2">
+              <input
+                id="fecha"
+                name="fecha"
+                type="date"
+                autocomplete="fecha"
+                required
+                class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              for="hora_retorno"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >Hora de Retorno:</label
+            >
+            <div class="mt-2">
+              <input
+                id="hora_retorno"
+                name="hora_retorno"
+                type="time"
+                autocomplete="hora_retorno"
+                required
+                class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              for="estado"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >Estado</label
+            >
+            <div class="mt-2">
+              <input
+                id="estado"
+                name="estado"
+                type="text"
+                autocomplete="estado"
+                required
+                class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div>
+            <button
+              id="buttonSolicitar"
+              type="submit"
+              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onclick="extenderSolicitud()"
+            >
+              Extender
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
   <!-- sweetalert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
   <script>
+    const linkSolicitudes = document.getElementById('solicitudes') // Esta en base.html
     const form = document.getElementById('formPermiso');
-    const divFormDetalle = document.getElementById('formPermisoDetalle');
-
+    const divFormPermiso = document.getElementById('formPermiso');
+    const divFormPermisoPendiente = document.getElementById('formPermisoPendiente');
     // Evento de carga de página
     document.addEventListener('DOMContentLoaded', function() {
        // Establecer fecha actual a input fecha
@@ -133,8 +199,10 @@
 
     form.addEventListener('submit', (event) => {
             event.preventDefault();
+            const dni = document.getElementById("dni").textContent.trim();
             const nameText = document.getElementById("name").textContent.trim();
             const formData = new FormData(form);
+            formData.append('dni', dni)
             formData.append('full_name', nameText)
             // console.log('formData', formData)
             fetch('http://127.0.0.1:5000/permisos/crear_permiso', {
@@ -177,16 +245,27 @@
       }
     }
     async function getName(valueDni) {
-      const url = `http://127.0.0.1:5000/name/${valueDni}`
-      let response = await fetch(url);
+      const url = `http://127.0.0.1:5000/get_data_by_dni/${valueDni}`
+      let response = await fetch(url,{
+                method: 'GET',
+				        headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
       let json_response = await response.json();
       if (response.ok) {
         const statusPermission = json_response.data.status_permission
+        const user_mode = json_response.data.user_mode
         // si el HTTP-status es 200-299
         console.log("json", json_response);
         document.getElementById("name").innerHTML = json_response.data.full_name;
+        if (user_mode == 'admin') linkSolicitudes.classList.remove('hidden')
+        else if (user_mode == 'user') linkSolicitudes.classList.add('hidden');
+
         if (statusPermission == null) {
-          divFormDetalle.classList.remove('hidden')
+          divFormPermiso.classList.remove('hidden')
+        } else if (statusPermission == 'PENDIENTE') {
+          divFormPermisoPendiente.classList.remove('hidden')
         }
       } else {
         console.log('response', json_response)

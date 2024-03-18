@@ -204,3 +204,69 @@ werkzeug.exceptions.UnsupportedMediaType: 415 Unsupported Media Type: Did not at
 psycopg2.errors.StringDataRightTruncation: el valor es demasiado largo para el tipo character varying(60)
 
 
+2024-03-18 17:02:03 | ERROR | llave duplicada viola restricción de unicidad «dni»
+DETAIL:  Ya existe la llave (dni)=(47518569).
+
+2024-03-18 17:02:03 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\services\EmployeeService.py", line 49, in create_employee
+    cursor.execute("""INSERT INTO public.employees(dni, full_name)
+psycopg2.errors.UniqueViolation: llave duplicada viola restricción de unicidad «dni»
+DETAIL:  Ya existe la llave (dni)=(47518569).
+
+
+2024-03-18 18:31:33 | ERROR | no existe la función fun_get_last_permission_by_dni(integer)
+LINE 2:                             SELECT * FROM fun_get_last_permi...
+                                                  ^
+HINT:  Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.
+
+2024-03-18 18:31:33 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\services\PermissionService.py", line 90, in get_status_permisssion_by_dni
+    cursor.execute(query)
+psycopg2.errors.UndefinedFunction: no existe la función fun_get_last_permission_by_dni(integer)
+LINE 2:                             SELECT * FROM fun_get_last_permi...
+                                                  ^
+HINT:  Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.
+
+
+2024-03-18 18:31:53 | ERROR | no existe la función fun_get_last_permission_by_dni(integer)
+LINE 2:                             SELECT * FROM fun_get_last_permi...
+                                                  ^
+HINT:  Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.
+
+2024-03-18 18:31:53 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\services\PermissionService.py", line 90, in get_status_permisssion_by_dni
+    cursor.execute(query)
+psycopg2.errors.UndefinedFunction: no existe la función fun_get_last_permission_by_dni(integer)
+LINE 2:                             SELECT * FROM fun_get_last_permi...
+                                                  ^
+HINT:  Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.
+
+
+2024-03-18 18:32:29 | ERROR | 'NoneType' object has no attribute 'to_json'
+2024-03-18 18:32:29 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\services\PermissionService.py", line 106, in get_status_permisssion_by_dni
+    return permission.to_json()
+           ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'to_json'
+
+2024-03-18 18:33:47 | ERROR | 'NoneType' object has no attribute 'to_json'
+2024-03-18 18:33:47 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\services\PermissionService.py", line 107, in get_status_permisssion_by_dni
+    return permission.to_json()
+           ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'to_json'
+
+2024-03-18 18:40:28 | ERROR | list indices must be integers or slices, not str
+2024-03-18 18:40:28 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\home.py", line 26, in get_data_by_dni
+    data_response['employee'] = employee
+    ~~~~~~~~~~~~~^^^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+2024-03-18 18:48:59 | ERROR | 'dict' object has no attribute 'to_json'
+2024-03-18 18:48:59 | ERROR | Traceback (most recent call last):
+  File "C:\Users\roberttm\Documents\proyectos\App permisos y ausencias\app-permisos-ausencias\src\home.py", line 26, in get_data_by_dni
+    data_response.append(employee.to_json())
+                         ^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'to_json'
+

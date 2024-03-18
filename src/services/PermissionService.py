@@ -79,6 +79,36 @@ class PermissionService():
             Logger.add_to_log("error", traceback.format_exc())
 
     @classmethod
+    def get_status_permisssion_by_dni(cls, dni):
+        try:
+            connection = connectionDB.connect()
+            permission = []
+            with connection.cursor() as cursor:
+                query = f"""
+                            SELECT * FROM fun_get_last_permission_by_dni('{dni}');
+                        """
+                cursor.execute(query)
+                resultset = cursor.fetchall()
+                for row in resultset:
+                    print('row', row)
+                    permission = Permission(
+                        int(row[0]),
+                        row[1],
+                        row[2],
+                        row[3],
+                        row[4],
+                        row[5],
+                        row[6],
+                        row[7],
+                        row[8]
+                    )
+            connectionDB.close()
+            return permission.to_json()
+        except Exception as e:
+            Logger.add_to_log("error", str(e))
+            Logger.add_to_log("error", traceback.format_exc())
+
+    @classmethod
     def create_permission(cls, permission):
         print('create_permission', permission.to_json())
         try:
