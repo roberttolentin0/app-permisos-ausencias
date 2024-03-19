@@ -6,6 +6,9 @@ from src.utils.Logger import Logger
 from src.utils.DateFormat import DateFormat
 # Models
 from src.models.PermissionModel import Permission
+from src.models.PermissionDetailsModel import PermissionDetailsModel
+# Services
+from src.services.PermissionDetailsService import PermissionDetailsService
 
 connectionDB = PGConnection()
 
@@ -121,7 +124,7 @@ class PermissionService():
                 return_time= datetime.strptime(permission.return_time, "%H:%M").time()
                 cursor.execute("""INSERT INTO permissions
                                 (dni, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at)
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
                                 (permission.dni,
                                  permission.permission_date,
                                  start_time,
@@ -131,7 +134,14 @@ class PermissionService():
                                  permission.observation,
                                  permission.validator_id,
                                  datetime.now()))
+                # Obtener el ID del nuevo registro insertado
+                id_creado = cursor.fetchone()[0]
+                connection.commit()
+                print('id_creado', id_creado)
                 affected_rows = cursor.rowcount
+                if affected_rows == 1:
+                    permission_detail = PermissionDetailsModel(None,  id_creado, permission.reason, permission.return_time)
+                    affected_additional_rows = PermissionDetailsService.create_permission_detail(permission_detail=permission_detail)
                 connection.commit()
             connectionDB.close()
             return affected_rows
@@ -185,3 +195,31 @@ class PermissionService():
         except Exception as e:
             Logger.add_to_log("error", str(e))
             Logger.add_to_log("error", traceback.format_exc())
+
+    @classmethod
+    def extend_return_time_permission(cls, id_permission, new_return_time, new_reason):
+        print('extend_permission')
+        try:
+            connection = connectionDB.connect()
+            connection.autocommit = False
+            with connection.cursor() as cursor:
+                cursor.execute("""UPDATE public.permissions
+                                        SET status='EXTENDIDO', validator_id='1', updated_at=%s
+                                        WHERE id = %s;
+                                """,(datetime.now(),  id_permission))
+                affected_rows = cursor.rowcount
+                if affected_rows == 1:
+                    additional_permission = PermissionDetailsModel(None,  id_permission, new_reason, new_return_time)
+                    affected_additional_rows = PermissionDetailsService.create_permission_detail(permission_detail=additional_permission)
+                # Confirmar la transacción
+                connection.commit()
+                print('additional: ', affected_rows)
+            connectionDB.close()
+            return affected_rows
+        except Exception as e:
+            # Rollback de la transacción si hay un error
+            connection.rollback()
+            Logger.add_to_log("error", str(e))
+            Logger.add_to_log("error", traceback.format_exc())
+        finally:
+            connectionDB.close()

@@ -300,7 +300,7 @@
           buttonExtender.classList.remove('hidden')
           buttonEliminar.classList.add('hidden')
           buttonExtender.onclick = () => {
-            extenderPermiso(id)
+            extender(id)
           }
         }
         if (status == 'PENDIENTE') {
@@ -316,7 +316,7 @@
       }
     }
 
-    function extenderPermiso(id) {
+    function extender(id) {
 		// Lógica para Extender el elemento con el ID proporcionado
 		console.log("Extender ID:", id);
 		Swal.fire({
@@ -331,17 +331,9 @@
 			showLoaderOnConfirm: true,
 			preConfirm: (valueText) => {
 				try {
+
 					console.log('valueText', valueText)
-				// const githubUrl = `
-				// 	https://api.github.com/users/${login}
-				// `;
-				// const response = await fetch(githubUrl);
-				// if (!response.ok) {
-				// 	return Swal.showValidationMessage(`
-				// 	${JSON.stringify(await response.json())}
-				// 	`);
-				// }
-				// return response.json();
+				  extenderPermiso(id, valueText)
 				} catch (error) {
 				Swal.showValidationMessage(`
 					Request failed: ${error}
@@ -358,6 +350,45 @@
 			}
 			});
 	}
+
+  function extenderPermiso(id, newTime, newReason = ''){
+    data = {
+      id,
+      action: 'extender',
+      newTime,
+      newReason
+		};
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+        method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				        Swal.fire("Extendido!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Extendido"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
 
 	function eliminar(id) {
 		console.log('Eliminar permiso')

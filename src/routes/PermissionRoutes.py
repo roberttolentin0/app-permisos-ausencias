@@ -90,8 +90,12 @@ def update_permission():
             rejection_reason = data['rejection_reason']
             affected_rows = PermissionService.update_status_permission(id=id, status='RECHAZADO', observation=rejection_reason)
         elif action == 'extender':
-            affected_rows = PermissionService.update_status_permission(id=id, status='EXTENDIDO')
+            # affected_rows = PermissionService.update_status_permission(id=id, status='EXTENDIDO')
             print('Extender Permiso')
+            new_return_time = data['newTime']
+            new_reason = data['newReason']
+            print('new_return_time', new_return_time)
+            affected_rows = PermissionService.extend_return_time_permission(id_permission=id, new_return_time=new_return_time, new_reason=new_reason)
         elif action == 'eliminar':
             affected_rows = PermissionService.update_status_permission(id=id, status='ELIMINADO')
             print('Eliminar Permiso')
@@ -105,12 +109,3 @@ def update_permission():
     except Exception as e:
         Logger.add_to_log("error", str(e))
         Logger.add_to_log("error", traceback.format_exc())
-
-# @bp.route('/accept_permission', methods=['POST'])
-# def accept_permission():
-#     try:
-#         print('Actualizar permiso, estado aceptado')
-#         return jsonify({'message': 'success', 'data': {}}), 200
-#     except Exception as e:
-#         Logger.add_to_log("error", str(e))
-#         Logger.add_to_log("error", traceback.format_exc())
