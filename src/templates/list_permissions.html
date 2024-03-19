@@ -180,6 +180,7 @@
 			'PENDIENTE': 'bg-gray-300',
 			'ACEPTADO': 'bg-gradient-to-r from-teal-300 to-teal-400',
 			'RECHAZADO': 'bg-red-400',
+			'ELIMINADO': 'bg-red-400',
 			'EXTENDIDO': 'bg-gradient-to-r from-yellow-300 to-orange-300',
 			'FINALIZADO': 'bg-gradient-to-r from-cyan-300 to-blue-300',
 		}
@@ -366,9 +367,59 @@
 	}
 
 	function eliminar(id) {
-		// Lógica para eliminar el elemento con el ID proporcionado
-		console.log("Eliminar ID:", id);
+		console.log('Eliminar permiso')
+    	Swal.fire({
+			title: '¿Eliminar salida?',
+			showCancelButton: true,
+			icon: 'question',
+			confirmButtonText: "Si, Eliminar",
+		}).then((result) => {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+        		eliminarPermiso(id)
+				// Acción para aceptar
+			} else if (result.isDenied) {
+        		console.log('Eliminado')
+			}
+		});
 	}
+
+  function eliminarPermiso(id){
+    data = {
+					id,
+					action: 'eliminar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+        method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				        Swal.fire("Eliminado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Eliminado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
 
 	function extender(id) {
 		// Lógica para Extender el elemento con el ID proporcionado
@@ -412,7 +463,7 @@
 			}
 			});
 	}
-	function finalizar() {
+	function finalizar(id) {
 		// Lógica para aceptar el elemento con el ID proporcionado
 		Swal.fire({
 			title: '¿Registrar Retorno?',
@@ -422,12 +473,46 @@
 		}).then((result) => {
 			/* Read more about isConfirmed, isDenied below */
 			if (result.isConfirmed) {
-				// Acción para aceptar
-				Swal.fire("Registrado!", "", "success");
-			} else if (result.isDenied) {
-				rechazar('1')
+				finalizarPermiso(id)
 			}
 		});
 	}
+
+	function finalizarPermiso(id){
+    data = {
+					id,
+					action: 'finalizar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+        method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				        Swal.fire("Registrado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Finalizado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
 </script>
 {% endblock %}
