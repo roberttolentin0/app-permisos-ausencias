@@ -92,7 +92,12 @@ def update_permission():
         elif action == 'extender':
             affected_rows = PermissionService.update_status_permission(id=id, status='EXTENDIDO')
             print('Extender Permiso')
-
+        elif action == 'eliminar':
+            affected_rows = PermissionService.update_status_permission(id=id, status='ELIMINADO')
+            print('Eliminar Permiso')
+        elif action == 'finalizar':
+            affected_rows = PermissionService.end_time_permission(id=id)
+            print('Finalizar Permiso')
         if affected_rows == 1:
             return jsonify({'message': 'success'}), 200
         else:
