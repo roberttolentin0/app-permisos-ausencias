@@ -1,5 +1,5 @@
 import traceback
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from src.services.EmployeeService import EmployeeService
 from src.services.PermissionService import PermissionService
 from src.utils.Logger import Logger
@@ -8,6 +8,24 @@ bp = Blueprint('home', __name__)
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
+    print('go index home')
+    return render_template('index.html')
+
+@bp.route('/login_view')
+def view_login():
+    print('Login permiso', request)
+    return render_template('login.html')
+
+@bp.route('/login', methods=['POST'])
+def login():
+    print('Login permiso', request)
+    print('Crear permiso', request.form)
+    # data = request.json
+    # print('data', data)
+    # password = data['id']
+    password = request.form['password']
+    if password == '123456':
+        return jsonify({ 'message': 'Empleado no encontrado' }), 200
     print('go index home')
     return render_template('index.html')
 
