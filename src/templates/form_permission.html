@@ -11,7 +11,7 @@
     <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
       <div>
         <label
-          for="email"
+          for="dni"
           class="block text-sm font-medium leading-6 text-gray-900"
           >DNI:</label
         >
@@ -32,6 +32,7 @@
             </span>
         </div>
       </div>
+      <hr class="mb-4" />
       <form id='formPermiso' class="space-y-6 hidden">
         <div class="space-y-2">
           <div>
@@ -101,7 +102,6 @@
                 ></textarea>
             </div>
           </div>
-  
           <div>
             <button
               id="buttonSolicitar"
@@ -114,66 +114,79 @@
           </div>
         </div>
       </form>
-      <form id='formPermisoPendiente' class="space-y-6 hidden">
+      <form id='formPermisoPendiente' class="space-y-6 text-center hidden">
         <div class="space-y-2">
+          <h4 class="block font-medium text-gray-900">Solicitud Activa</h4>
           <div>
             <label
-              for="fecha"
+              for="fechaPendiente"
               class="block text-sm font-medium leading-6 text-gray-900"
-              >fecha:</label
+              >Fecha</label
             >
             <div class="mt-2">
               <input
-                id="fecha"
-                name="fecha"
+                id="fechaPendiente"
+                name="fechaPendiente"
                 type="date"
-                autocomplete="fecha"
-                required
+                disabled
                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div>
             <label
-              for="hora_retorno"
+              for="horaRetornoPendiente"
               class="block text-sm font-medium leading-6 text-gray-900"
-              >Hora de Retorno:</label
+              >Hora de Retorno</label
             >
             <div class="mt-2">
               <input
-                id="hora_retorno"
-                name="hora_retorno"
+                id="horaRetornoPendiente"
+                name="horaRetornoPendiente"
                 type="time"
-                autocomplete="hora_retorno"
-                required
+                disabled
                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div>
             <label
-              for="estado"
+              for="estadoPendiente"
               class="block text-sm font-medium leading-6 text-gray-900"
               >Estado</label
             >
-            <div class="mt-2">
+            <div id="estadoPendiente" class="mt-2">
+            </div>
+            <!-- <div class="mt-2">
               <input
-                id="estado"
-                name="estado"
+                id="estadoPendiente"
+                name="estadoPendiente"
                 type="text"
-                autocomplete="estado"
-                required
+                disabled
                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
-            </div>
+            </div> -->
           </div>
-          <div>
+          <br />
+          <div class="flex justify-center">
             <button
-              id="buttonSolicitar"
-              type="submit"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onclick="extenderSolicitud()"
+              id="buttonEliminar"
+              type="button"
+              class="hidden flex w-1/2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
+              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+              &nbsp
+              Eliminar
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <button
+              id="buttonExtender"
+              type="button"
+              class="hidden flex w-1/2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+              &nbsp;
               Extender
             </button>
           </div>
@@ -199,7 +212,7 @@
 
     form.addEventListener('submit', (event) => {
             event.preventDefault();
-            const dni = document.getElementById("dni").textContent.trim();
+            const dni = document.getElementById("dni").value.trim();
             const nameText = document.getElementById("name").textContent.trim();
             const formData = new FormData(form);
             formData.append('dni', dni)
@@ -227,7 +240,7 @@
               Toast.fire({
                 icon: "success",
                 title: "Permiso solicitado"
-              }).then(() => window.location.href = '/permisos/');
+              }).then(() => location.reload());
             })
             .catch(error => {
                 console.error(error);
@@ -245,7 +258,13 @@
       }
     }
     async function getName(valueDni) {
+      const fechaPendiente = document.getElementById('fechaPendiente')
+      const horaRetornoPendiente = document.getElementById('horaRetornoPendiente')
+      const estadoPendiente = document.getElementById('estadoPendiente')
+      const buttonExtender = document.getElementById('buttonExtender')
+      const buttonEliminar = document.getElementById('buttonEliminar')
       const url = `http://127.0.0.1:5000/get_data_by_dni/${valueDni}`
+
       let response = await fetch(url,{
                 method: 'GET',
 				        headers: {
@@ -254,23 +273,155 @@
             });
       let json_response = await response.json();
       if (response.ok) {
-        const statusPermission = json_response.data.status_permission
-        const user_mode = json_response.data.user_mode
+        const data_response = json_response.data;
+        const user_mode = data_response.employee.user_mode
+        const {id, permission_date, return_time, status} = data_response.permission
         // si el HTTP-status es 200-299
         console.log("json", json_response);
-        document.getElementById("name").innerHTML = json_response.data.full_name;
+        document.getElementById("name").innerHTML = data_response.employee.full_name;
         if (user_mode == 'admin') linkSolicitudes.classList.remove('hidden')
         else if (user_mode == 'user') linkSolicitudes.classList.add('hidden');
 
-        if (statusPermission == null) {
+        if (status == null || status == 'FINALIZADO' || status == 'ELIMINADO') {
           divFormPermiso.classList.remove('hidden')
-        } else if (statusPermission == 'PENDIENTE') {
+          divFormPermisoPendiente.classList.add('hidden')
+        } else {
           divFormPermisoPendiente.classList.remove('hidden')
+          divFormPermiso.classList.add('hidden')
+          // Parsear permission_date
+          const partsDate = permission_date.split('/');
+          fechaPendiente.value =  new Date(partsDate[2], partsDate[1] - 1, partsDate[0]).toISOString().split('T')[0];
+          horaRetornoPendiente.value = return_time
+          const span = document.createElement('span');
+          estadoPendiente.innerHTML = renderStatus(status)
+        }
+
+        if (status == 'ACEPTADO') {
+          buttonExtender.classList.remove('hidden')
+          buttonEliminar.classList.add('hidden')
+          buttonExtender.onclick = () => {
+            extenderPermiso(id)
+          }
+        }
+        if (status == 'PENDIENTE') {
+          buttonExtender.classList.add('hidden')
+          buttonEliminar.classList.remove('hidden')
+          buttonEliminar.onclick = () => {
+            eliminar(id)
+          }
         }
       } else {
         console.log('response', json_response)
         alert("Error-HTTP: " + json_response.message);
       }
     }
+
+    function extenderPermiso(id) {
+		// Lógica para Extender el elemento con el ID proporcionado
+		console.log("Extender ID:", id);
+		Swal.fire({
+			title: "¿Solicitar extensión tiempo?",
+			text: "Nuevo tiempo de retorno",
+			input: "time",
+			inputAttributes: {
+				autocapitalize: "off"
+			},
+			showCancelButton: true,
+			confirmButtonText: "Solicitar",
+			showLoaderOnConfirm: true,
+			preConfirm: (valueText) => {
+				try {
+					console.log('valueText', valueText)
+				// const githubUrl = `
+				// 	https://api.github.com/users/${login}
+				// `;
+				// const response = await fetch(githubUrl);
+				// if (!response.ok) {
+				// 	return Swal.showValidationMessage(`
+				// 	${JSON.stringify(await response.json())}
+				// 	`);
+				// }
+				// return response.json();
+				} catch (error) {
+				Swal.showValidationMessage(`
+					Request failed: ${error}
+				`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+			}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire({
+				title: `${result.value.login}'s avatar`,
+				imageUrl: result.value.avatar_url
+				});
+			}
+			});
+	}
+
+	function eliminar(id) {
+		console.log('Eliminar permiso')
+    Swal.fire({
+			title: '¿Eliminar salida?',
+			showCancelButton: true,
+			icon: 'warning',
+			confirmButtonText: "Si, Eliminar",
+		}).then((result) => {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+        eliminarPermiso(id)
+				// Acción para aceptar
+			} else if (result.isDenied) {
+        console.log('Eliminado')
+			}
+		});
+	}
+
+  function eliminarPermiso(id){
+    data = {
+					id,
+					action: 'eliminar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+        method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				        Swal.fire("Eliminado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Eliminado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
+  function renderStatus(status){
+    const colorStatus = {
+        'PENDIENTE': 'bg-gray-300',
+        'ACEPTADO': 'bg-gradient-to-r from-teal-300 to-teal-400',
+        'RECHAZADO': 'bg-red-400',
+        'EXTENDIDO': 'bg-gradient-to-r from-yellow-300 to-orange-300',
+        'FINALIZADO': 'bg-gradient-to-r from-cyan-300 to-blue-300',
+    }
+    return `<span class='text-sm px-2 py-1 text-white rounded ${colorStatus[status]}'>${status}</span>`
+}
   </script>
 </section>

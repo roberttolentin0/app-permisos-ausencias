@@ -15,7 +15,7 @@ connectionRhDB = RhDBConnection()
 class EmployeeService():
 
     @classmethod
-    def get_name_employee(cls, dni):
+    def get_name_employee(cls, dni: str):
         '''Obtiene datos de la DB de RRHH'''
         try:
             connection = connectionRhDB.connect()
