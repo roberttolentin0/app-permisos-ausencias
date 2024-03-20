@@ -109,7 +109,7 @@ class PermissionService():
                         end_time,
                     )
             connectionDB.close()
-            return permission.to_json()
+            return permission.to_json() if permission != [] else []
         except Exception as e:
             Logger.add_to_log("error", str(e))
             Logger.add_to_log("error", traceback.format_exc())

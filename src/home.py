@@ -20,9 +20,6 @@ def view_login():
 def login():
     print('Login permiso', request)
     print('Crear permiso', request.form)
-    # data = request.json
-    # print('data', data)
-    # password = data['id']
     password = request.form['password']
     if password == '123456':
         return jsonify({ 'message': 'Empleado no encontrado' }), 200
@@ -44,10 +41,10 @@ def get_data_by_dni(dni):
             if dni in ['77043715', '12345678']: # Antonella and Danne
                 employee['user_mode'] = 'admin'
             data_response['employee'] = employee
-        if len(permission) != 0:
-            data_response['permission'] = permission
         else:
             return jsonify({ 'message': 'Empleado no encontrado' }), 404
+        # if len(permission) != 0:
+        data_response['permission'] = permission
     except Exception as e:
         Logger.add_to_log("error", str(e))
         Logger.add_to_log("error", traceback.format_exc())
