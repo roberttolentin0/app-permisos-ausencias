@@ -321,7 +321,7 @@
 		// Lógica para Extender el elemento con el ID proporcionado
 		console.log("Extender ID:", id);
 		Swal.fire({
-			title: "¿Solicitar extensión tiempo?",
+			title: "¿Solicitar extensión de tiempo?",
 			text: "Nuevo tiempo de retorno",
 			input: "time",
 			inputAttributes: {
@@ -355,7 +355,7 @@
   function extenderPermiso(id, newTime, newReason = ''){
     data = {
       id,
-      action: 'extender',
+      action: 'pedir',
       newTime,
       newReason
 		};
@@ -369,7 +369,7 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-				        Swal.fire("Extendido!", "", "success");
+				        Swal.fire("Solicitado!", "", "success");
                 const Toast = Swal.mixin({
                 toast: true,
                 position: "bottom",
@@ -383,7 +383,7 @@
               });
               Toast.fire({
                 icon: "success",
-                title: "Permiso Extendido"
+                title: "Extensión solicitada"
               }).then(() => location.reload());
             })
             .catch(error => {

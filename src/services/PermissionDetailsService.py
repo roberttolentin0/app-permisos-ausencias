@@ -4,6 +4,7 @@ from datetime import datetime
 from src.database.db_postgres import PGConnection
 # Logger
 from src.utils.Logger import Logger
+from src.utils.DateFormat import DateFormat
 # Models
 from src.models.PermissionDetailsModel import PermissionDetailsModel
 # from src.models.AdditionalPermissionModel import ViewAdditionalPermissionModel
@@ -12,45 +13,32 @@ connectionDB = PGConnection()
 
 class PermissionDetailsService():
 
-    # @classmethod
-    # def get_additional_permisssions_by_id(cls, permission_id):
-    #     try:
-    #         connection = connectionDB.connect()
-    #         additional_permissions = []
-    #         with connection.cursor() as cursor:
-    #             cursor.execute(
-    #                 """SELECT
-    #                 permission_id,
-    #                 permission_date,
-    #                 start_time,
-    #                 return_time,
-    #                 reason,
-    #                 status,
-    #                 end_time,
-    #                 additional_reason,
-    #                 additional_time
-	#                 FROM public.view_additional_permissions WHERE permission_id = %s"""
-    #                 ,(permission_id))
-    #             resultset = cursor.fetchall()
-    #             for row in resultset:
-    #                 print('row', row)
-    #                 additional_permission = ViewAdditionalPermissionModel(
-    #                     int(row[0]),
-    #                     row[1],
-    #                     row[2],
-    #                     row[3],
-    #                     row[4],
-    #                     row[5],
-    #                     row[6],
-    #                     row[7],
-    #                     row[8]
-    #                 )
-    #                 additional_permissions.append(additional_permission.to_json())
-    #         connection.close()
-    #         return additional_permissions
-    #     except Exception as e:
-    #         Logger.add_to_log("error", str(e))
-    #         Logger.add_to_log("error", traceback.format_exc())
+    @classmethod
+    def get_details_by_permission_id(cls, permission_id):
+        try:
+            connection = connectionDB.connect()
+            additional_permission = None
+            with connection.cursor() as cursor:
+                query = f"""
+                            SELECT id, permission_id, reason, return_time
+                            FROM public.permission_details
+                            WHERE permission_id = {permission_id}  ORDER BY id desc LIMIT 1
+                        """
+                cursor.execute(query)
+                resultset = cursor.fetchall()
+                for row in resultset:
+                    print('row', row)
+                    additional_permission = PermissionDetailsModel(
+                        int(row[0]),
+                        int(row[1]),
+                        row[2],
+                        DateFormat.convert_time(row[3]),
+                    )
+            connection.close()
+            return additional_permission.to_json()
+        except Exception as e:
+            Logger.add_to_log("error", str(e))
+            Logger.add_to_log("error", traceback.format_exc())
 
     @classmethod
     def create_permission_detail(cls, permission_detail):
