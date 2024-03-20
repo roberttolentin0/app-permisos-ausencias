@@ -1,7 +1,6 @@
 import traceback
-
 from flask import Blueprint, render_template, request, jsonify, flash
-
+from datetime import datetime
 # Logger
 from src.utils.Logger import Logger
 # Models
@@ -9,8 +8,9 @@ from src.models.PermissionModel import Permission
 from src.models.EmployeeModel import Employee
 # Services
 from src.services.microsoft_teams_service import cron_send_notification_teams
-from src.services.PermissionService import PermissionService
 from src.services.EmployeeService import EmployeeService
+from src.services.PermissionService import PermissionService
+from src.services.PermissionDetailsService import PermissionDetailsService
 
 bp = Blueprint('permission_blueprint', __name__)
 
@@ -39,7 +39,7 @@ def get_permission(id):
     except Exception as e:
         Logger.add_to_log("error", str(e))
         Logger.add_to_log("error", traceback.format_exc())
-    return permission
+    return permission.to_json()
 
 @bp.route('/crear_permiso', methods=['POST'])
 def create_permission():
@@ -91,13 +91,26 @@ def update_permission():
         elif action == 'rechazar':
             rejection_reason = data['rejection_reason']
             affected_rows = PermissionService.update_status_permission(id=id, status='RECHAZADO', observation=rejection_reason)
-        elif action == 'extender':
-            # affected_rows = PermissionService.update_status_permission(id=id, status='EXTENDIDO')
-            print('Extender Permiso')
+        elif action == 'pedir':
+            print('Pedir Extensión Permiso')
             new_return_time = data['newTime']
             new_reason = data['newReason']
-            print('new_return_time', new_return_time)
+            # Guardar en permission_details
             affected_rows = PermissionService.extend_return_time_permission(id_permission=id, new_return_time=new_return_time, new_reason=new_reason)
+        elif action == 'extender':
+            # Cambia el estado a FINALIZADO y crea una nueva solicitud de permiso
+            affected_rows = PermissionService.end_time_permission(id=id)
+            # obtener este ultimo permiso
+            old_permission = PermissionService.get_permisssion(id)
+            # Crear uno nuevo con los datos del ultimo permission_details
+            new_detail_permission = PermissionDetailsService.get_details_by_permission_id(id)
+            print('new_detail_permission', new_detail_permission)
+            # Create permission
+            curr_time = datetime.now().strftime("%H:%M")
+            new_return_time = new_detail_permission['return_time']
+            new_reason = old_permission.reason # new_detail_permission['reason']
+            permission = Permission(None, old_permission.dni, old_permission.permission_date, curr_time, new_return_time, new_reason, 'PENDIENTE', '', 1)
+            affected_rows = PermissionService.create_permission(permission=permission)
         elif action == 'eliminar':
             affected_rows = PermissionService.update_status_permission(id=id, status='ELIMINADO')
             print('Eliminar Permiso')
