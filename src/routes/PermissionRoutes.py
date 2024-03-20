@@ -8,6 +8,7 @@ from src.utils.Logger import Logger
 from src.models.PermissionModel import Permission
 from src.models.EmployeeModel import Employee
 # Services
+from src.services.microsoft_teams_service import cron_send_notification_teams
 from src.services.PermissionService import PermissionService
 from src.services.EmployeeService import EmployeeService
 
@@ -19,7 +20,7 @@ def index():
     try:
         permissions = PermissionService.get_permisssions()
         if (len(permissions) > 0):
-             print('go index permisos', permissions)
+             print('go index permisos')
         else:
             Exception('No hay permisos')
     except Exception as ex:
@@ -86,6 +87,7 @@ def update_permission():
 
         if action == 'aceptar':
             affected_rows = PermissionService.update_status_permission(id=id, status='ACEPTADO')
+            cron_send_notification_teams('INIT')
         elif action == 'rechazar':
             rejection_reason = data['rejection_reason']
             affected_rows = PermissionService.update_status_permission(id=id, status='RECHAZADO', observation=rejection_reason)

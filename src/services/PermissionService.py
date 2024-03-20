@@ -183,7 +183,6 @@ class PermissionService():
             connection = connectionDB.connect()
             curr_time = datetime.now().strftime("%H:%M:%S")
             with connection.cursor() as cursor:
-                print('Finalizar')
                 cursor.execute("""UPDATE public.permissions
                                         SET status='FINALIZADO', end_time=%s, validator_id='1', updated_at=%s
                                         WHERE id = %s;
