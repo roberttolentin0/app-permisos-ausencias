@@ -22,8 +22,8 @@ class PermissionService():
             permissions = []
             with connection.cursor() as cursor:
                 query = """
-                            SELECT id, dni, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at, updated_at, end_time
-                            FROM public.permissions p
+                            SELECT id, name, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at, updated_at, end_time
+                            FROM public.view_permissions
                         """
                 cursor.execute(query)
                 resultset = cursor.fetchall()
@@ -56,7 +56,7 @@ class PermissionService():
             permission = None
             with connection.cursor() as cursor:
                 query = f"""
-                            SELECT id, dni, permission_date, start_time, end_time, reason, status, observation, validator_id, created_at, updated_at
+                            SELECT id, dni, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at, updated_at, end_time
                             FROM public.permissions p
                             WHERE id = {id}
                         """
@@ -64,19 +64,21 @@ class PermissionService():
                 resultset = cursor.fetchall()
                 for row in resultset:
                     print('row', row)
+                    end_time = DateFormat.convert_time(row[9]) if row[9] is not None else '00:00'
                     permission = Permission(
                         int(row[0]),
                         row[1],
-                        row[2],
-                        row[3],
-                        row[4],
+                        DateFormat.convert_date(row[2]),
+                        DateFormat.convert_time(row[3]),
+                        DateFormat.convert_time(row[4]),
                         row[5],
                         row[6],
                         row[7],
-                        row[8]
+                        row[8],
+                        end_time,
                     )
             connectionDB.close()
-            return permission.to_json()
+            return permission
         except Exception as e:
             Logger.add_to_log("error", str(e))
             Logger.add_to_log("error", traceback.format_exc())
@@ -196,8 +198,8 @@ class PermissionService():
             Logger.add_to_log("error", traceback.format_exc())
 
     @classmethod
-    def extend_return_time_permission(cls, id_permission, new_return_time, new_reason):
-        print('extend_permission')
+    def new_return_time_permission(cls, id_permission, new_return_time, new_reason):
+        print('new_extend_permission')
         try:
             connection = connectionDB.connect()
             connection.autocommit = False
@@ -222,3 +224,29 @@ class PermissionService():
             Logger.add_to_log("error", traceback.format_exc())
         finally:
             connectionDB.close()
+
+    @classmethod
+    def update_status_extend_permission(cls, id, status, new_return_time, new_reason):
+        print('update_extend_permission')
+        try:
+            connection = connectionDB.connect()
+            with connection.cursor() as cursor:
+                query =f"""
+                            UPDATE public.permissions
+                            SET status='{status}', return_time='{new_return_time}', updated_at='{datetime.now()}'
+                            WHERE id = {id};
+                        """
+                if new_reason != '':
+                    query =f"""
+                                UPDATE public.permissions
+                                SET status='{status}', return_time='{new_return_time}', reason='{new_reason}', updated_at='{datetime.now()}'
+                                WHERE id = {id};
+                            """
+                cursor.execute(query)
+                affected_rows = cursor.rowcount
+                connection.commit()
+            connectionDB.close()
+            return affected_rows
+        except Exception as e:
+            Logger.add_to_log("error", str(e))
+            Logger.add_to_log("error", traceback.format_exc())

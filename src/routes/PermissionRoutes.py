@@ -1,7 +1,6 @@
 import traceback
-
 from flask import Blueprint, render_template, request, jsonify, flash
-
+from datetime import datetime
 # Logger
 from src.utils.Logger import Logger
 # Models
@@ -9,8 +8,9 @@ from src.models.PermissionModel import Permission
 from src.models.EmployeeModel import Employee
 # Services
 from src.services.microsoft_teams_service import cron_send_notification_teams
-from src.services.PermissionService import PermissionService
 from src.services.EmployeeService import EmployeeService
+from src.services.PermissionService import PermissionService
+from src.services.PermissionDetailsService import PermissionDetailsService
 
 bp = Blueprint('permission_blueprint', __name__)
 
@@ -32,6 +32,20 @@ def index():
 def get_permission(id):
     try:
         permission = PermissionService.get_permisssion(id)
+        if permission is not None:
+             print('go index permisos', permission)
+        else:
+            Exception('No hay permisos')
+    except Exception as e:
+        Logger.add_to_log("error", str(e))
+        Logger.add_to_log("error", traceback.format_exc())
+    return permission.to_json()
+
+@bp.route('get_permission_details/<int:id>', methods=['GET'])
+def get_permission_details(id):
+    print('get_permission_details', id)
+    try:
+        permission = PermissionDetailsService.get_details_by_permission_id(id)
         if permission is not None:
              print('go index permisos', permission)
         else:
@@ -80,30 +94,47 @@ def update_permission():
     try:
         print('Actualizar permiso', request)
         data = request.json
-        # print('data', data)
         id = data['id']
         action = data['action']
         affected_rows = None
 
         if action == 'aceptar':
             affected_rows = PermissionService.update_status_permission(id=id, status='ACEPTADO')
-            cron_send_notification_teams('INIT')
+            if affected_rows == 1:
+                cron_send_notification_teams('INIT')
+
         elif action == 'rechazar':
             rejection_reason = data['rejection_reason']
             affected_rows = PermissionService.update_status_permission(id=id, status='RECHAZADO', observation=rejection_reason)
-        elif action == 'extender':
-            # affected_rows = PermissionService.update_status_permission(id=id, status='EXTENDIDO')
-            print('Extender Permiso')
+
+        elif action == 'pedir':
             new_return_time = data['newTime']
-            new_reason = data['newReason']
-            print('new_return_time', new_return_time)
-            affected_rows = PermissionService.extend_return_time_permission(id_permission=id, new_return_time=new_return_time, new_reason=new_reason)
+            new_reason = data['newReason'] # No se esta enviando desde el Front
+            # Guardar en permission_details
+            affected_rows = PermissionService.new_return_time_permission(id_permission=id, new_return_time=new_return_time, new_reason=new_reason)
+
+        elif action == 'extender':
+            new_detail_permission = PermissionDetailsService.get_last_details_by_permission_id(id)
+            ## UPDATE estado Aceptar extensión y modificar nueva hora de retorno
+            affected_rows = PermissionService.update_status_extend_permission(
+                id=id, status='ACEPTADO',
+                new_return_time=new_detail_permission['return_time'],
+                new_reason=new_detail_permission['reason']
+            )
+            if affected_rows == 1:
+                cron_send_notification_teams('INIT')
+
         elif action == 'eliminar':
             affected_rows = PermissionService.update_status_permission(id=id, status='ELIMINADO')
             print('Eliminar Permiso')
+
         elif action == 'finalizar':
-            affected_rows = PermissionService.end_time_permission(id=id)
-            print('Finalizar Permiso')
+            permission = PermissionService.get_permisssion(id)
+            if permission is not None:
+             if permission.status == 'ACEPTADO':
+                affected_rows = PermissionService.end_time_permission(id=id)
+                print('Finalizar Permiso')
+
         if affected_rows == 1:
             return jsonify({'message': 'success'}), 200
         else:
