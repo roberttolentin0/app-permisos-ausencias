@@ -218,6 +218,11 @@
 				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             </button>
 		`
+		const buttonDetails= `
+			<button onclick="showDetails(${id})" class="bg-blue-0 text-white py-1"">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" style="width:100%;height:100%;transform:translate3d(0,0,0);content-visibility:visible" viewBox="0 0 500 500"><defs><clipPath id="a"><path d="M0 0h500v500H0z"/></clipPath><clipPath id="c"><path d="M0 0h500v500H0z"/></clipPath><clipPath id="b"><path d="M0 0h500v500H0z"/></clipPath></defs><g clip-path="url(#a)"><g clip-path="url(#b)" style="display:block"><g class="primary design" style="display:none"><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path class="primary"/><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path fill="#4a90e2" d="m427.222 397.726-75.488-75.488c21.017-27.245 33.661-61.281 33.661-98.234 0-89.152-72.488-161.432-161.432-161.432-88.945 0-161.433 72.28-161.433 161.432 0 88.944 72.488 161.433 161.433 161.433 37.014 0 71.071-12.686 98.338-33.745l75.467 75.488a20.773 20.773 0 0 0 14.727 6.103 20.773 20.773 0 0 0 14.727-6.103c8.144-8.145 8.144-21.31 0-29.454zm-203.26-293.494c66.032 0 119.773 53.741 119.773 119.772s-53.741 119.773-119.772 119.773c-66.032 0-119.773-53.742-119.773-119.773 0-66.03 53.741-119.772 119.773-119.772z" class="primary"/></g><g class="primary design" style="display:block"><path fill="#4a90e2" d="m427.222 397.726-75.488-75.488c21.017-27.245 33.661-61.281 33.661-98.234 0-89.152-72.488-161.432-161.432-161.432-88.945 0-161.433 72.28-161.433 161.432 0 88.944 72.488 161.433 161.433 161.433 37.014 0 71.071-12.686 98.338-33.745l75.467 75.488a20.773 20.773 0 0 0 14.727 6.103 20.773 20.773 0 0 0 14.727-6.103c8.144-8.145 8.144-21.31 0-29.454zm-203.26-293.494c66.032 0 119.773 53.741 119.773 119.772s-53.741 119.773-119.772 119.773c-66.032 0-119.773-53.742-119.773-119.773 0-66.03 53.741-119.772 119.773-119.772z" class="primary"/></g></g><g clip-path="url(#c)" style="display:none"><g class="primary design" style="display:none"><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path class="primary"/><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path class="primary"/></g></g></g></svg>
+			</button>
+		`
 		const showButtonsByStatus = () => {
 			switch (status) {
 				case 'PENDIENTE':
@@ -225,7 +230,7 @@
 				case 'ACEPTADO':
 					return `${buttonFinalizar}`;
 				case 'EXTENDIDO':
-					return buttonExtendido;
+					return `${buttonExtendido}`;
 				case 'RECHAZADO':
 					return `${buttonEliminar}`;
 				default:
@@ -235,9 +240,57 @@
 
 		return `
         <div class="flex justify-evenly gap-2">
-            ${showButtonsByStatus()}
+            ${showButtonsByStatus()}${buttonDetails}
         </div>
 		`
+	}
+
+	function createTable(data) {
+		var table = `
+		<table class="table-auto" border="1"><thead><tr><th>Motivo&nbsp;</th><th>&nbsp;Hora</th></tr></thead><tbody>`;
+		// Iterar sobre cada objeto y agregar una fila a la tabla
+		for (var i = 0; i < data.length; i++) {
+			table += '<tr>';
+				table += '<td>' + data[i].reason + '</td>';
+				table += '<td>' + data[i].return_time + '</td>';
+			table += '</tr>';
+		}
+		table += '</tbody></table>';
+		return table;
+	}
+
+	async function showDetails(id){
+		const url = `http://127.0.0.1:5000/permisos/get_permission_details/${id}`
+		const response = await fetch(url,{
+                method: 'GET',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+		const json_response = await response.json();
+		if (response.ok) {
+			console.log('data_response', json_response)
+			const textHtml = createTable(json_response)
+			Swal.fire({
+				title: "<strong><u>Historial de Hora de Retorno</u></strong>",
+				icon: "info",
+				html: `
+				<div>Id Permiso: ${json_response[0].permission_id}</div>
+					<div class="flex justify-center">${textHtml}</div>
+				`,
+				showCloseButton: true,
+				showCancelButton: true,
+				focusConfirm: false,
+				confirmButtonText: `
+					<i class="fa fa-thumbs-up"></i> Great!
+				`,
+				confirmButtonAriaLabel: "Thumbs up, great!",
+			});
+		} else {
+			console.log('response', json_response)
+			alert("Error-HTTP: " + json_response.message);
+			location.reload()
+		}
 	}
 
 	function aceptar(id) {
