@@ -22,8 +22,8 @@ class PermissionService():
             permissions = []
             with connection.cursor() as cursor:
                 query = """
-                            SELECT id, dni, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at, updated_at, end_time
-                            FROM public.permissions p
+                            SELECT id, name, permission_date, start_time, return_time, reason, status, observation, validator_id, created_at, updated_at, end_time
+                            FROM public.view_permissions
                         """
                 cursor.execute(query)
                 resultset = cursor.fetchall()
