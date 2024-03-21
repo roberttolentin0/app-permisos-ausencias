@@ -118,11 +118,6 @@
         <div class="space-y-2">
           <h4 class="block font-medium text-gray-900">Solicitud Activa</h4>
           <div>
-            <label
-              for="fechaPendiente"
-              class="block text-sm font-medium leading-6 text-gray-900"
-              >Fecha</label
-            >
             <div class="mt-2">
               <input
                 id="fechaPendiente"
@@ -157,15 +152,15 @@
             >
             <div id="estadoPendiente" class="mt-2">
             </div>
-            <!-- <div class="mt-2">
-              <input
-                id="estadoPendiente"
-                name="estadoPendiente"
-                type="text"
-                disabled
-                class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div> -->
+          </div>
+          <div>
+            <label
+              for="estadoPendiente"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >Motivo</label
+            >
+            <p id="reasonPendiente" class="text-xs">
+            </p>
           </div>
           <br />
           <div class="flex justify-center">
@@ -258,6 +253,7 @@
       }
     }
     async function getName(valueDni) {
+      const reasonDiv = document.getElementById('reasonPendiente')
       const fechaPendiente = document.getElementById('fechaPendiente')
       const horaRetornoPendiente = document.getElementById('horaRetornoPendiente')
       const estadoPendiente = document.getElementById('estadoPendiente')
@@ -275,9 +271,8 @@
       if (response.ok) {
         const data_response = json_response.data;
         const user_mode = data_response.employee.user_mode
-        const {id, permission_date, return_time, status} = data_response.permission
+        const {id, permission_date, return_time, status, reason} = data_response.permission
         // si el HTTP-status es 200-299
-        console.log("json", json_response);
         document.getElementById("name").innerHTML = data_response.employee.full_name;
         if (user_mode == 'admin') linkSolicitudes.classList.remove('hidden')
         else if (user_mode == 'user') linkSolicitudes.classList.add('hidden');
@@ -288,6 +283,7 @@
         } else {
           divFormPermisoPendiente.classList.remove('hidden')
           divFormPermiso.classList.add('hidden')
+          reasonDiv.innerHTML = `<p>${reason}</p>`
           // Parsear permission_date
           const partsDate = permission_date.split('/');
           fechaPendiente.value =  new Date(partsDate[2], partsDate[1] - 1, partsDate[0]).toISOString().split('T')[0];
@@ -300,14 +296,14 @@
           buttonExtender.classList.remove('hidden')
           buttonEliminar.classList.add('hidden')
           buttonExtender.onclick = () => {
-            extender(id)
+            pedirExtender(id)
           }
         }
         if (status == 'PENDIENTE') {
           buttonExtender.classList.add('hidden')
           buttonEliminar.classList.remove('hidden')
           buttonEliminar.onclick = () => {
-            eliminar(id)
+            eliminarPermiso(id)
           }
         }
       } else {
@@ -317,42 +313,67 @@
       }
     }
 
-    function extender(id) {
-		// Lógica para Extender el elemento con el ID proporcionado
-		console.log("Extender ID:", id);
+    function pedirExtender(id) {
+		console.log("pedirExtencion ID:", id);
 		Swal.fire({
 			title: "¿Solicitar extensión de tiempo?",
 			text: "Nuevo tiempo de retorno",
-			input: "time",
+      html:
+            `
+          <div>
+            <label
+              for="swal-hora_retorno"
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >Hora de Retorno</label
+            >
+            <div class="mt-2">
+              <input
+                id="swal-hora_retorno"
+                name="swal-hora_retorno"
+                type="time"
+                required
+                class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+          </div>
+          <div>
+            <div class="mt-2">
+              <textarea
+                id="swal-motivo"
+                name="swal-motivo"
+                placeholder="Motivo"
+                rows="3"
+                class="px-3 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                required
+              ></textarea>
+            </div>
+          </div>`,
 			inputAttributes: {
 				autocapitalize: "off"
 			},
 			showCancelButton: true,
 			confirmButtonText: "Solicitar",
-			showLoaderOnConfirm: true,
 			preConfirm: (valueText) => {
+        const newReturnTime = document.getElementById('swal-hora_retorno').value;
+        const newReason = document.getElementById('swal-motivo').value;
 				try {
-
-					console.log('valueText', valueText)
-				  extenderPermiso(id, valueText)
+				  fetchPedirExtender(id, newReturnTime, newReason)
 				} catch (error) {
 				Swal.showValidationMessage(`
 					Request failed: ${error}
 				`);
 				}
 			},
-			allowOutsideClick: () => !Swal.isLoading()
 			}).then((result) => {
 			if (result.isConfirmed) {
 				Swal.fire({
-				title: `${result.value.login}'s avatar`,
-				imageUrl: result.value.avatar_url
+          title: `Extendido`,
+          imageUrl: result.value.avatar_url
 				});
 			}
 			});
 	}
 
-  function extenderPermiso(id, newTime, newReason = ''){
+  function fetchPedirExtender(id, newTime, newReason = ''){
     data = {
       id,
       action: 'pedir',
@@ -391,7 +412,7 @@
             });
   }
 
-	function eliminar(id) {
+	function eliminarPermiso(id) {
 		console.log('Eliminar permiso')
     Swal.fire({
 			title: '¿Eliminar salida?',
@@ -399,17 +420,15 @@
 			icon: 'warning',
 			confirmButtonText: "Si, Eliminar",
 		}).then((result) => {
-			/* Read more about isConfirmed, isDenied below */
 			if (result.isConfirmed) {
-        eliminarPermiso(id)
-				// Acción para aceptar
+        fetchEliminarPermiso(id)
 			} else if (result.isDenied) {
         console.log('Eliminado')
 			}
 		});
 	}
 
-  function eliminarPermiso(id){
+  function fetchEliminarPermiso(id){
     data = {
 					id,
 					action: 'eliminar'
