@@ -38,7 +38,7 @@ def get_data_by_dni(dni):
         permission = PermissionService.get_permisssion_by_dni(dni)
         if len(employee) != 0:
             employee['user_mode'] = 'user'
-            if dni in ['77043715', '12345678']: # Antonella and Danne
+            if dni in ['77043715', '74083687']: # Antonella and Danne
                 employee['user_mode'] = 'admin'
             data_response['employee'] = employee
         else:
