@@ -129,8 +129,11 @@ def update_permission():
             print('Eliminar Permiso')
 
         elif action == 'finalizar':
-            affected_rows = PermissionService.end_time_permission(id=id)
-            print('Finalizar Permiso')
+            permission = PermissionService.get_permisssion(id)
+            if permission is not None:
+             if permission.status == 'ACEPTADO':
+                affected_rows = PermissionService.end_time_permission(id=id)
+                print('Finalizar Permiso')
 
         if affected_rows == 1:
             return jsonify({'message': 'success'}), 200
