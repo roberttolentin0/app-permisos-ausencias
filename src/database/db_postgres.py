@@ -52,11 +52,11 @@ class PGConnection(DBConnection):
 
 class RhDBConnection(DBConnection):
     def __init__(self):
-        host = "40.86.9.189"
-        database = "RhDB2"
-        user = "sqladmin"
-        password = "Slayer20fer.."
-        port = "5433"
+        host =  os.getenv('DB_RH_HOST')
+        database = os.getenv('DB_RH_DATABASE')
+        user = os.getenv('DB_RH_USER')
+        password = os.getenv('DB_RH_PASSWORD')
+        port = os.getenv('DB_RH_PORT')
         super().__init__(host, database, user, password, port)
 
 
