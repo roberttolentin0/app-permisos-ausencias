@@ -14,7 +14,7 @@ connectionDB = PGConnection()
 class PermissionDetailsService():
 
     @classmethod
-    def get_details_by_permission_id(cls, permission_id):
+    def get_last_details_by_permission_id(cls, permission_id):
         try:
             connection = connectionDB.connect()
             additional_permission = None
@@ -36,6 +36,34 @@ class PermissionDetailsService():
                     )
             connection.close()
             return additional_permission.to_json()
+        except Exception as e:
+            Logger.add_to_log("error", str(e))
+            Logger.add_to_log("error", traceback.format_exc())
+
+    @classmethod
+    def get_details_by_permission_id(cls, permission_id):
+        try:
+            connection = connectionDB.connect()
+            details_permissions = []
+            with connection.cursor() as cursor:
+                query = f"""
+                            SELECT id, permission_id, reason, return_time
+                            FROM public.permission_details
+                            WHERE permission_id = {permission_id}  ORDER BY id desc
+                        """
+                cursor.execute(query)
+                resultset = cursor.fetchall()
+                for row in resultset:
+                    print('row', row)
+                    additional_permission = PermissionDetailsModel(
+                        int(row[0]),
+                        int(row[1]),
+                        row[2],
+                        DateFormat.convert_time(row[3]),
+                    )
+                    details_permissions.append(additional_permission.to_json())
+            connection.close()
+            return details_permissions
         except Exception as e:
             Logger.add_to_log("error", str(e))
             Logger.add_to_log("error", traceback.format_exc())

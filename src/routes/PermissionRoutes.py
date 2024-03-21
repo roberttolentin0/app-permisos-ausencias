@@ -41,6 +41,20 @@ def get_permission(id):
         Logger.add_to_log("error", traceback.format_exc())
     return permission.to_json()
 
+@bp.route('get_permission_details/<int:id>', methods=['GET'])
+def get_permission_details(id):
+    print('get_permission_details', id)
+    try:
+        permission = PermissionDetailsService.get_details_by_permission_id(id)
+        if permission is not None:
+             print('go index permisos', permission)
+        else:
+            Exception('No hay permisos')
+    except Exception as e:
+        Logger.add_to_log("error", str(e))
+        Logger.add_to_log("error", traceback.format_exc())
+    return permission
+
 @bp.route('/crear_permiso', methods=['POST'])
 def create_permission():
     print('Crear permiso', request.form)
@@ -103,7 +117,7 @@ def update_permission():
             # obtener este ultimo permiso
             old_permission = PermissionService.get_permisssion(id)
             # Crear uno nuevo con los datos del ultimo permission_details
-            new_detail_permission = PermissionDetailsService.get_details_by_permission_id(id)
+            new_detail_permission = PermissionDetailsService.get_last_details_by_permission_id(id)
             print('new_detail_permission', new_detail_permission)
             # Create permission
             curr_time = datetime.now().strftime("%H:%M")
