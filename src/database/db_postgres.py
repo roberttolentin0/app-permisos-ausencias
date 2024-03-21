@@ -1,8 +1,12 @@
+import os
 import traceback
 import psycopg2
 
 # Logger
 from src.utils.Logger import Logger
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class DBConnection:
@@ -38,11 +42,11 @@ class DBConnection:
 
 class PGConnection(DBConnection):
     def __init__(self):
-        host = "localhost"
-        database = "db_permisos"
-        user = "postgres"
-        password = "1234"
-        port = "5432"
+        host = os.getenv('DB_HOST')
+        database = os.getenv('DB_DATABASE')
+        user = os.getenv('DB_USER')
+        password = os.getenv('DB_PASSWORD')
+        port = os.getenv('DB_PORT')
         super().__init__(host, database, user, password, port)
 
 

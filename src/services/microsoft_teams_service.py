@@ -1,8 +1,12 @@
+import os
 import threading
 import time
 import requests
 import psycopg2
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Variable global para controlar el cron
 cron_activo = False
@@ -12,10 +16,11 @@ class DatabaseManager:
     def __init__(self):
         # Conectarse a la base de datos
         self.conn = psycopg2.connect(
-            dbname="db_permisos",
-            user="postgres",
-            password="1234",
-            host="localhost"
+            dbname=os.getenv('DB_DATABASE'),
+            user=os.getenv('DB_USER'),
+            password=os.getenv('DB_PASSWORD'),
+            host=os.getenv('DB_HOST'),
+            port=os.getenv('DB_PORT'),
         )
 
     def connection(self):
@@ -24,14 +29,14 @@ class DatabaseManager:
     # Método para obtener empleados con estado de permiso "ACTIVADO"
     def obtener_permisos_aceptados(self):
         cur = self.conn.cursor()
-        cur.execute("""SELECT dni, return_time, reason, status, observation
-	                FROM public.permissions WHERE status = 'ACEPTADO'""")
+        cur.execute("""SELECT name, return_time, reason, status, observation
+	                FROM public.view_permissions WHERE status = 'ACEPTADO'""")
         permisos = cur.fetchall()
         cur.close()
         permisos_json = []
         for row in permisos:
             permiso = {}
-            permiso['dni'] = row[0]
+            permiso['name'] = row[0]
             permiso['return_time'] = row[1]
             permisos_json.append(permiso)
         return permisos_json
@@ -45,12 +50,11 @@ def send_notification_to_teams(data):
         "summary": "Notificación",
         "sections": [
             {
-                "activityTitle": "Notificaciones del App permisos de salida",
+                "activityTitle": "Notificacion del App permisos de salida",
                 "activityImage": "https://1.bp.blogspot.com/-z6LMrSwx_XA/XbhhKRAfMZI/AAAAAAAAoFs/CCSm0SMIq-47MjxmjGvnmcZd4DN3GG63QCLcBGAsYHQ/s1600/email-4539382_1280.jpg",
                 "facts": [
-                    {"name": "Descripción del inconveniente : ", "value": data["descripcion"]},
                     {"name": "Empleado : ", "value": data["empleado_datos"]},
-                    {"name": "DNI : ", "value": data["empleado_dni"]},
+                    {"name": "Descripción: ", "value": data["descripcion"]},
                 ],
                 "potentialAction": [],
             }
@@ -69,17 +73,15 @@ def send_notification_to_teams(data):
 
 # Función para verificar la hora de salida de un empleado
 def verificar_hora_de_retorno_empleado(permiso):
-    # print('verificar_hora_de_retorno_empleado', permiso)
     curr_time = time.strftime("%H:%M")
     return_time_str = permiso["return_time"].strftime('%H:%M')
     return_time = time.strptime(return_time_str, "%H:%M")
     tiempo_espera = (return_time.tm_hour - time.strptime(curr_time, "%H:%M").tm_hour) * 3600 + (return_time.tm_min - time.strptime(curr_time, "%H:%M").tm_min) * 60
     print(tiempo_espera)
     if 0 < tiempo_espera <= 900:  # Si faltan 15 minutos o menos para la hora de retorno
-        msg = f"¡{permiso['dni']} está por Retornar! Su hora de Retorno es a las {return_time_str}"
+        msg = f"¡Está por Retornar! Su hora de Retorno es a las {return_time_str}"
         data = {
-                'empleado_datos' : '',
-                'empleado_dni' : permiso['dni'],
+                'empleado_datos' : permiso['name'],
                 'descripcion' : msg,
                 }
         send_notification_to_teams(data)
@@ -99,7 +101,7 @@ def verificar_permisos_aceptados_cada_media_hora(db_manager):
             cron_send_notification_teams('END')
             break
         programar_verificacion_hora_retorno_empleados_aceptados(permisos_aceptados)
-        time.sleep(60)  # Esperar 1 minuto antes de volver a verificar hora de retorno
+        time.sleep(300)  # Esperar 5 minuto antes de volver a verificar la hora de retorno
     print("Hilo de verificación de estado detenido.")
     db_manager.connection().close()
 
