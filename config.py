@@ -11,7 +11,9 @@ class Config():
 class DevelopmentConfig(Config):
     DEBUG = True
 
+class ProductConfig(Config):
+    DEBUG = False
 
 config = {
-    'development': DevelopmentConfig
+    'development': ProductConfig
 }
