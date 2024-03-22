@@ -1,4 +1,4 @@
-## App permisos y ausencias V0.1
+## App permisos y ausencias V1.0.0
 
 ## Tecnologias
 # Backend
