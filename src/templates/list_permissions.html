@@ -1,0 +1,586 @@
+{% extends 'base.html' %}
+{% block head %}
+	<!--Regular Datatables CSS-->
+	<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+	<!--Responsive Extension Datatables CSS-->
+	<link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
+
+	<style>
+		/*Overrides for Tailwind CSS */
+
+		/*Form fields*/
+		.dataTables_wrapper select,
+		.dataTables_wrapper .dataTables_filter input {
+			color: #4a5568;
+			/*text-gray-700*/
+			padding-left: 1rem;
+			/*pl-4*/
+			padding-right: 1rem;
+			/*pl-4*/
+			padding-top: .5rem;
+			/*pl-2*/
+			padding-bottom: .5rem;
+			/*pl-2*/
+			line-height: 1.25;
+			/*leading-tight*/
+			border-width: 2px;
+			/*border-2*/
+			border-radius: .25rem;
+			border-color: #edf2f7;
+			/*border-gray-200*/
+			background-color: #edf2f7;
+			/*bg-gray-200*/
+		}
+
+		/*Row Hover*/
+		table.dataTable.hover tbody tr:hover,
+		table.dataTable.display tbody tr:hover {
+			background-color: #ebf4ff;
+			/*bg-indigo-100*/
+		}
+
+		/*Pagination Buttons*/
+		.dataTables_wrapper .dataTables_paginate .paginate_button {
+			font-weight: 700;
+			/*font-bold*/
+			border-radius: .25rem;
+			/*rounded*/
+			border: 1px solid transparent;
+			/*border border-transparent*/
+		}
+
+		/*Pagination Buttons - Current selected */
+		.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+			color: #fff !important;
+			/*text-white*/
+			box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+			/*shadow*/
+			font-weight: 700;
+			/*font-bold*/
+			border-radius: .25rem;
+			/*rounded*/
+			background: #667eea !important;
+			/*bg-indigo-500*/
+			border: 1px solid transparent;
+			/*border border-transparent*/
+		}
+
+		/*Pagination Buttons - Hover */
+		.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+			color: #fff !important;
+			/*text-white*/
+			box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+			/*shadow*/
+			font-weight: 700;
+			/*font-bold*/
+			border-radius: .25rem;
+			/*rounded*/
+			background: #667eea !important;
+			/*bg-indigo-500*/
+			border: 1px solid transparent;
+			/*border border-transparent*/
+		}
+
+		/*Add padding to bottom border */
+		table.dataTable.no-footer {
+			border-bottom: 1px solid #e2e8f0;
+			/*border-b-1 border-gray-300*/
+			margin-top: 0.75em;
+			margin-bottom: 0.75em;
+		}
+
+		/*Change colour of responsive icon*/
+		table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,
+		table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+			background-color: #667eea !important;
+			/*bg-indigo-500*/
+		}
+		/* Estilos personalizados para las celdas td del DataTables */
+		#tablaPermisos.dataTable td {
+            text-align: center; /* Alineación del texto */
+        }
+	</style>
+{% endblock %}
+
+{% block content %}
+	<!--Container-->
+	<div class="container w-full md:w-4/5 xl:w-4/5  mx-auto px-5">
+		<!--Card-->
+		<div id='recipients' class="p-3 mt-6 lg:mt-0 rounded shadow bg-white">
+			<div class="flex gap-2 mb-2 text-xs">
+				<p class="text-blue-400 py-1 flex">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+					<span class="pl-1">Finalizar</span>
+				</p>
+				<p class="text-blue-400 py-1 flex">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+					<span class="pl-1">Extender</span>
+				</p>
+				<p class="text-orange-400 py-1 flex">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+					<span class="pl-1">Extendido</span>
+				</p>
+			</div>
+
+			<table id="tablaPermisos" class="stripe hover text-sm" style="width:100%; padding-top: 1em;  padding-bottom: 1em;">
+				<thead>
+					<tr>
+						<th data-priority="1">ID</th>
+						<th data-priority="2">Fecha</th>
+						<th data-priority="3">Solicitante</th>
+						<th data-priority="4">Hora Salida</th>
+						<th data-priority="5">Hora Retorno</th>
+						<th data-priority="6">Hora Ingreso</th>
+						<th data-priority="7" style="min-width: 300px;">Motivo</th>
+                        <th data-priority="8">Estado</th>
+                        <th data-priority="9">Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!--/container-->
+{% endblock %}
+{% block script %}
+<!--Datatables -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script>
+	// Accede a los datos de Flask pasados a la plantilla HTML utilizando Jinja2
+	var permissions = {{ permissions|tojson|safe }};
+	console.log('permissions', permissions)
+	$(document).ready(function() {
+		var tablaPermisos = $('#tablaPermisos').DataTable({
+			responsive: true,
+			"order": [[ 0, "desc" ]]
+		})
+		  .columns.adjust()
+		  .responsive.recalc();
+
+		  // Agregar las filas a la tabla DataTables
+		  permissions.forEach(function(permission) {
+			tablaPermisos.row.add([
+				permission.id,
+				permission.permission_date,
+				`<span style="font-size: 0.7rem"}>${permission.dni}</span>`,
+				permission.start_time,
+				permission.return_time,
+				permission.end_time,
+				permission.reason,
+				renderRowStatus(permission.status),
+				renderRowOptions(permission.id, permission.status)
+			]).draw();
+		});
+	});
+
+	function renderRowStatus(status){
+		const colorStatus = {
+			'PENDIENTE': 'bg-gray-300',
+			'ACEPTADO': 'bg-gradient-to-r from-teal-300 to-teal-400',
+			'RECHAZADO': 'bg-red-400',
+			'ELIMINADO': 'bg-red-400',
+			'EXTENDIDO': 'bg-gradient-to-r from-yellow-300 to-orange-300',
+			'FINALIZADO': 'bg-gradient-to-r from-cyan-300 to-blue-300',
+		}
+		return `<span class='text-xs px-2 py-1 text-white rounded ${colorStatus[status]}'>${status}</span>`
+	}
+	function renderRowOptions(id, status){
+		const buttonAceptar = `
+			<button onclick="aceptar(${id})" class="bg-indigo-0 text-white py-1"">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </button>
+		`
+		const buttonFinalizar = `
+			<button  onclick="finalizar(${id})" class="py-1"">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </button>
+		`
+		// Not used hay la opcion de rechazar en el modal de aceptar
+		const buttonRechazar= `
+			<button onclick="rechazar(${id})" class="bg-red-0 text-white py-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="18" y1="8" x2="23" y2="13"></line><line x1="23" y1="8" x2="18" y2="13"></line></svg>
+            </button>
+		`
+		const buttonEliminar = `
+			<button onclick="eliminar(${id})" class="bg-red-0 text-white py-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+		`
+		const buttonExtender = `
+			<button onclick="extender(${id})" class="bg-red-0 text-white py-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4a90e2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            </button>
+		`
+		const buttonExtendido = `
+			<button onclick="extender(${id})" class="bg-blue-0 text-white py-1"">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </button>
+		`
+		const buttonDetails= `
+			<button onclick="showDetails(${id})" class="bg-blue-0 text-white py-1"">
+				<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" style="width:100%;height:100%;transform:translate3d(0,0,0);content-visibility:visible" viewBox="0 0 500 500"><defs><clipPath id="a"><path d="M0 0h500v500H0z"/></clipPath><clipPath id="c"><path d="M0 0h500v500H0z"/></clipPath><clipPath id="b"><path d="M0 0h500v500H0z"/></clipPath></defs><g clip-path="url(#a)"><g clip-path="url(#b)" style="display:block"><g class="primary design" style="display:none"><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path class="primary"/><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path fill="#4a90e2" d="m427.222 397.726-75.488-75.488c21.017-27.245 33.661-61.281 33.661-98.234 0-89.152-72.488-161.432-161.432-161.432-88.945 0-161.433 72.28-161.433 161.432 0 88.944 72.488 161.433 161.433 161.433 37.014 0 71.071-12.686 98.338-33.745l75.467 75.488a20.773 20.773 0 0 0 14.727 6.103 20.773 20.773 0 0 0 14.727-6.103c8.144-8.145 8.144-21.31 0-29.454zm-203.26-293.494c66.032 0 119.773 53.741 119.773 119.772s-53.741 119.773-119.772 119.773c-66.032 0-119.773-53.742-119.773-119.773 0-66.03 53.741-119.772 119.773-119.772z" class="primary"/></g><g class="primary design" style="display:block"><path fill="#4a90e2" d="m427.222 397.726-75.488-75.488c21.017-27.245 33.661-61.281 33.661-98.234 0-89.152-72.488-161.432-161.432-161.432-88.945 0-161.433 72.28-161.433 161.432 0 88.944 72.488 161.433 161.433 161.433 37.014 0 71.071-12.686 98.338-33.745l75.467 75.488a20.773 20.773 0 0 0 14.727 6.103 20.773 20.773 0 0 0 14.727-6.103c8.144-8.145 8.144-21.31 0-29.454zm-203.26-293.494c66.032 0 119.773 53.741 119.773 119.772s-53.741 119.773-119.772 119.773c-66.032 0-119.773-53.742-119.773-119.773 0-66.03 53.741-119.772 119.773-119.772z" class="primary"/></g></g><g clip-path="url(#c)" style="display:none"><g class="primary design" style="display:none"><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path class="primary"/><path fill="none" class="primary"/></g><g class="primary design" style="display:none"><path class="primary"/></g></g></g></svg>
+			</button>
+		`
+		const showButtonsByStatus = () => {
+			switch (status) {
+				case 'PENDIENTE':
+					return `${buttonAceptar}${buttonEliminar}`;
+				case 'ACEPTADO':
+					return `${buttonFinalizar}`;
+				case 'EXTENDIDO':
+					return `${buttonExtendido}`;
+				case 'RECHAZADO':
+					return `${buttonEliminar}`;
+				default:
+					return '';
+			}
+		}
+
+		return `
+        <div class="flex justify-evenly gap-2">
+            ${showButtonsByStatus()}${buttonDetails}
+        </div>
+		`
+	}
+
+	function createTable(data) {
+		var table = `
+		<table class="table-auto" border="1"><thead><tr><th>Motivo&nbsp;</th><th>&nbsp;Hora</th></tr></thead><tbody>`;
+		// Iterar sobre cada objeto y agregar una fila a la tabla
+		for (var i = 0; i < data.length; i++) {
+			table += '<tr>';
+				table += '<td>' + data[i].reason + '</td>';
+				table += '<td>' + data[i].return_time + '</td>';
+			table += '</tr>';
+		}
+		table += '</tbody></table>';
+		return table;
+	}
+
+	async function showDetails(id){
+		const url = `http://127.0.0.1:5000/permisos/get_permission_details/${id}`
+		const response = await fetch(url,{
+                method: 'GET',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+		const json_response = await response.json();
+		if (response.ok) {
+			console.log('data_response', json_response)
+			const textHtml = createTable(json_response)
+			Swal.fire({
+				title: "<strong><u>Historial de Hora de Retorno</u></strong>",
+				icon: "info",
+				html: `
+				<div>Id Permiso: ${json_response[0].permission_id}</div>
+					<div class="flex justify-center">${textHtml}</div>
+				`,
+				showCloseButton: true,
+				showCancelButton: true,
+				focusConfirm: false,
+				confirmButtonText: `
+					<i class="fa fa-thumbs-up"></i> Great!
+				`,
+				confirmButtonAriaLabel: "Thumbs up, great!",
+			});
+		} else {
+			console.log('response', json_response)
+			alert("Error-HTTP: " + json_response.message);
+			location.reload()
+		}
+	}
+
+	function aceptar(id) {
+		Swal.fire({
+			title: '¿Aceptas el permiso?',
+			showDenyButton: true,
+			showCancelButton: true,
+			icon: 'question',
+			confirmButtonText: "Aceptar",
+			denyButtonText: `Rechazar`
+		}).then((result) => {
+			if (result.isConfirmed) {
+				aceptarPermiso(id)
+			} else if (result.isDenied) {
+				rechazar(id)
+				/* Async - await anonimo
+				(async () => {
+				// 	const { value: text } = await Swal.fire({
+				// 		input: "textarea",
+				// 		inputLabel: "Rechazar",
+				// 		inputPlaceholder: "Motivo de rechazo.",
+				// 		inputAttributes: {
+				// 			"aria-label": "Type your message here"
+				// 		},
+				// 		showCancelButton: true,
+				// 		confirmButtonText: "Rechazar",
+				// 	});
+				// 	if (text) {
+				// 		// Accion para rechazar
+				// 		Swal.fire(text);
+				// 	}
+				// 	})()*/
+			}
+		});
+	}
+
+    async function rechazar(id) {
+		// Lógica para rechazar el elemento con el ID proporcionado
+		const { value: text } = await Swal.fire({
+			input: "textarea",
+			inputLabel: "Rechazar",
+			inputPlaceholder: "Motivo de rechazo...",
+			inputAttributes: {
+				"aria-label": "Type your message here"
+			},
+			showCancelButton: true,
+			confirmButtonText: "Rechazar",
+		});
+		if (text) {
+			// Accion para rechazar
+			rechazarPermiso(id, text)
+		}
+	}
+
+	function aceptarPermiso(id) {
+		console.log('aceptar permiso')
+		data = {
+					id,
+					action: 'aceptar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+                method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				Swal.fire("Aceptado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Aceptado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+	}
+
+	function rechazarPermiso(id, rejectionReason) {
+		console.log('Rechazar permiso')
+		data = {
+					id,
+					rejection_reason: rejectionReason,
+					action: 'rechazar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+                method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "warning",
+                title: "Salida Rechazada"
+              }).then(() => window.location.href = '/permisos/');
+            })
+            .catch(error => {
+                console.error(error);
+            });
+	}
+
+	function eliminar(id) {
+		console.log('Eliminar permiso')
+    	Swal.fire({
+			title: '¿Eliminar salida?',
+			showCancelButton: true,
+			icon: 'question',
+			confirmButtonText: "Si, Eliminar",
+		}).then((result) => {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+        		eliminarPermiso(id)
+				// Acción para aceptar
+			} else if (result.isDenied) {
+        		console.log('Eliminado')
+			}
+		});
+	}
+
+  function eliminarPermiso(id){
+    data = {
+					id,
+					action: 'eliminar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+        method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				        Swal.fire("Eliminado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Eliminado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
+
+  function extender(id) {
+		Swal.fire({
+			title: '¿Extender el permiso?',
+			showDenyButton: true,
+			showCancelButton: true,
+			icon: 'question',
+			confirmButtonText: "Extender",
+			denyButtonText: `Rechazar`
+		}).then((result) => {
+			if (result.isConfirmed) {
+				extenderPermiso(id)
+			} else if (result.isDenied) {
+				rechazar(id)
+			}
+		});
+	}
+
+	function extenderPermiso(id) {
+		console.log('Extender permiso')
+		data = {
+					id,
+					action: 'extender'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+                method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				Swal.fire("Extendido!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Extendido y Aceptado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+	}
+
+	function finalizar(id) {
+		// Lógica para aceptar el elemento con el ID proporcionado
+		Swal.fire({
+			title: '¿Registrar Retorno?',
+			showCancelButton: true,
+			icon: 'question',
+			confirmButtonText: "Si, Registrar",
+		}).then((result) => {
+			/* Read more about isConfirmed, isDenied below */
+			if (result.isConfirmed) {
+				finalizarPermiso(id)
+			}
+		});
+	}
+
+	function finalizarPermiso(id){
+    data = {
+					id,
+					action: 'finalizar'
+				}
+		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+        method: 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+				        Swal.fire("Registrado!", "", "success");
+                const Toast = Swal.mixin({
+                toast: true,
+                position: "bottom",
+                showConfirmButton: false,
+                timer: 1200,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                }
+              });
+              Toast.fire({
+                icon: "success",
+                title: "Permiso Finalizado"
+              }).then(() => location.reload());
+            })
+            .catch(error => {
+                console.error(error);
+            });
+  }
+</script>
+{% endblock %}
