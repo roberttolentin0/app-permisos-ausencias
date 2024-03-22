@@ -192,7 +192,6 @@
   <!-- sweetalert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
   <script>
-    const baseUrl = "{{ url_for('home.index', _external=True) }}";
     const linkSolicitudes = document.getElementById('solicitudes') // Esta en base.html
     const form = document.getElementById('formPermiso');
     const divFormPermiso = document.getElementById('formPermiso');
@@ -218,7 +217,7 @@
             formData.append('dni', dni)
             formData.append('full_name', nameText)
             // console.log('formData', formData)
-            fetch(`${baseUrl}permisos/crear_permiso`, {
+            fetch(`/permisos/crear_permiso`, {
                 method: 'POST',
                 body: formData
             })
@@ -264,7 +263,7 @@
       const estadoPendiente = document.getElementById('estadoPendiente')
       const buttonExtender = document.getElementById('buttonExtender')
       const buttonEliminar = document.getElementById('buttonEliminar')
-      const url = `${baseUrl}get_data_by_dni/${valueDni}`
+      const url = `/get_data_by_dni/${valueDni}`
 
       let response = await fetch(url,{
                 method: 'GET',
@@ -385,7 +384,7 @@
       newTime,
       newReason
 		};
-		fetch(`${baseUrl}permisos/update_permission`, {
+		fetch('/permisos/update_permission', {
         method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
@@ -439,7 +438,7 @@
 					id,
 					action: 'eliminar'
 				}
-		fetch(`${baseUrl}permisos/update_permission`, {
+		fetch('/permisos/update_permission', {
         method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
