@@ -53,14 +53,13 @@
     <!-- sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
     <script>
-      const baseUrl = "{{ url_for('home.index', _external=True) }}";
       const linkSolicitudes = document.getElementById('solicitudes') // Esta en base.html
       const form = document.getElementById('formLogin');
       form.addEventListener('submit', (event) => {
               event.preventDefault();
               const formData = new FormData(form);
               // console.log('formData', formData)
-              fetch(`${baseUrl}login`, {
+              fetch('/login', {
                   method: 'POST',
                   body: formData
               })
