@@ -150,7 +150,8 @@
 <script>
 	// Accede a los datos de Flask pasados a la plantilla HTML utilizando Jinja2
 	var permissions = {{ permissions|tojson|safe }};
-	console.log('permissions', permissions)
+	const baseUrl = "{{ url_for('home.index', _external=True) }}";
+	// console.log('permissions', permissions)
 	$(document).ready(function() {
 		var tablaPermisos = $('#tablaPermisos').DataTable({
 			responsive: true,
@@ -260,7 +261,7 @@
 	}
 
 	async function showDetails(id){
-		const url = `http://127.0.0.1:5000/permisos/get_permission_details/${id}`
+		const url = `${baseUrl}permisos/get_permission_details/${id}`
 		const response = await fetch(url,{
                 method: 'GET',
 				headers: {
@@ -351,7 +352,7 @@
 					id,
 					action: 'aceptar'
 				}
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
                 method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
@@ -390,7 +391,7 @@
 					rejection_reason: rejectionReason,
 					action: 'rechazar'
 				}
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
                 method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
@@ -444,7 +445,7 @@
 					id,
 					action: 'eliminar'
 				}
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
         method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
@@ -499,7 +500,7 @@
 					id,
 					action: 'extender'
 				}
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
                 method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
@@ -551,7 +552,7 @@
 					id,
 					action: 'finalizar'
 				}
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
         method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'

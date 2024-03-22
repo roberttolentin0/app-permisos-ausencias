@@ -97,6 +97,10 @@ def update_permission():
         id = data['id']
         action = data['action']
         affected_rows = None
+        permission = PermissionService.get_permisssion(id)
+        if permission is not None:
+            if permission.status == 'FINALIZADO':
+                return jsonify({'message': "Permiso FINALIZADO, No se puede actualizar"}), 500
 
         if action == 'aceptar':
             affected_rows = PermissionService.update_status_permission(id=id, status='ACEPTADO')
