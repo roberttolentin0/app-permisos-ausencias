@@ -192,6 +192,7 @@
   <!-- sweetalert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.all.min.js"></script>
   <script>
+    const baseUrl = "{{ url_for('home.index', _external=True) }}";
     const linkSolicitudes = document.getElementById('solicitudes') // Esta en base.html
     const form = document.getElementById('formPermiso');
     const divFormPermiso = document.getElementById('formPermiso');
@@ -209,11 +210,15 @@
             event.preventDefault();
             const dni = document.getElementById("dni").value.trim();
             const nameText = document.getElementById("name").textContent.trim();
+            if (dni == '' || nameText == '') {
+              alert('Verificar DNI')
+              return
+            }
             const formData = new FormData(form);
             formData.append('dni', dni)
             formData.append('full_name', nameText)
             // console.log('formData', formData)
-            fetch('http://127.0.0.1:5000/permisos/crear_permiso', {
+            fetch(`${baseUrl}permisos/crear_permiso`, {
                 method: 'POST',
                 body: formData
             })
@@ -259,7 +264,7 @@
       const estadoPendiente = document.getElementById('estadoPendiente')
       const buttonExtender = document.getElementById('buttonExtender')
       const buttonEliminar = document.getElementById('buttonEliminar')
-      const url = `http://127.0.0.1:5000/get_data_by_dni/${valueDni}`
+      const url = `${baseUrl}get_data_by_dni/${valueDni}`
 
       let response = await fetch(url,{
                 method: 'GET',
@@ -380,7 +385,7 @@
       newTime,
       newReason
 		};
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
         method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
@@ -409,6 +414,7 @@
             })
             .catch(error => {
                 console.error(error);
+                alert('NO se puede actualizar el permiso' + error)
             });
   }
 
@@ -433,7 +439,7 @@
 					id,
 					action: 'eliminar'
 				}
-		fetch('http://127.0.0.1:5000/permisos/update_permission', {
+		fetch(`${baseUrl}permisos/update_permission`, {
         method: 'POST',
 				headers: {
                     'Content-Type': 'application/json'
