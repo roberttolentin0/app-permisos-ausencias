@@ -1,8 +1,12 @@
+import os
 import traceback
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from src.services.EmployeeService import EmployeeService
 from src.services.PermissionService import PermissionService
 from src.utils.Logger import Logger
+from dotenv import load_dotenv
+
+load_dotenv()
 
 bp = Blueprint('home', __name__)
 
@@ -21,10 +25,13 @@ def login():
     print('Login permiso', request)
     print('Crear permiso', request.form)
     password = request.form['password']
-    if password == '123456':
+    if password == os.getenv('PASSWORD_ADMIN'):
+        print('go index home')
+        # return render_template('index.html')
         return jsonify({ 'message': 'Empleado no encontrado' }), 200
-    print('go index home')
-    return render_template('index.html')
+    else:
+        return jsonify({ 'message': 'Datos incorrectos' }), 404
+
 
 @bp.route("/get_data_by_dni/<string:dni>")
 def get_data_by_dni(dni):

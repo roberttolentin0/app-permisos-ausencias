@@ -21,7 +21,6 @@
                         required
                         maxlength="8"
                         class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        onkeyup="handleInputDni()"
                         />
                   </div>
                   <div class="space-y-2">
@@ -55,6 +54,17 @@
     <script>
       const linkSolicitudes = document.getElementById('solicitudes') // Esta en base.html
       const form = document.getElementById('formLogin');
+      const Toast = Swal.mixin({
+                    toast: true,
+                    position: "bottom",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.onmouseenter = Swal.stopTimer;
+                      toast.onmouseleave = Swal.resumeTimer;
+                    }
+                  });
       form.addEventListener('submit', (event) => {
               event.preventDefault();
               const formData = new FormData(form);
@@ -63,26 +73,24 @@
                   method: 'POST',
                   body: formData
               })
-              .then(response => response.json())
+              .then(response => {
+                console.log('response', response)
+                if (response.status != 200) {
+                  Toast.fire({
+                    icon: "error",
+                    title: "Datos incorrectos"
+                  });
+                  return
+                }
+                return response.json()
+              })
               .then(data => {
-                  console.log(data);
-                  console.log("{{ url_for('home.view_login') }}")
+                  console.log(data, data.status);
                   // Notificación
-                  const Toast = Swal.mixin({
-                  toast: true,
-                  position: "bottom",
-                  showConfirmButton: false,
-                  timer: 1500,
-                  timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                  }
-                });
-                Toast.fire({
-                  icon: "success",
-                  title: "Ingresando"
-                }).then(() => window.location.href = "{{ url_for('permission_blueprint.index') }}");
+                  Toast.fire({
+                    icon: "success",
+                    title: "Ingresando"
+                  }).then(() => window.location.href = "{{ url_for('permission_blueprint.index') }}");
               })
               .catch(error => {
                   console.error(error);
