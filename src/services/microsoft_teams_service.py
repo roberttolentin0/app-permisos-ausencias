@@ -1,12 +1,15 @@
 import os
 import threading
 import time
+import pytz
 import requests
 import psycopg2
 import json
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
+peru_timezone = pytz.timezone('America/Lima')
 
 # Variable global para controlar el cron
 cron_activo = False
@@ -73,10 +76,11 @@ def send_notification_to_teams(data):
 
 # Función para verificar la hora de salida de un empleado
 def verificar_hora_de_retorno_empleado(permiso):
-    curr_time = time.strftime("%H:%M")
+    # curr_time = time.strftime("%H:%M") # Hora del dispositvo o servidor donde se encontra la App
+    curr_time_peru = datetime.now(peru_timezone).strftime("%H:%M")
     return_time_str = permiso["return_time"].strftime('%H:%M')
     return_time = time.strptime(return_time_str, "%H:%M")
-    tiempo_espera = (return_time.tm_hour - time.strptime(curr_time, "%H:%M").tm_hour) * 3600 + (return_time.tm_min - time.strptime(curr_time, "%H:%M").tm_min) * 60
+    tiempo_espera = (return_time.tm_hour - time.strptime(curr_time_peru, "%H:%M").tm_hour) * 3600 + (return_time.tm_min - time.strptime(curr_time_peru, "%H:%M").tm_min) * 60
     print(tiempo_espera)
     if 0 < tiempo_espera <= 900:  # Si faltan 15 minutos o menos para la hora de retorno
         msg = f"¡Está por Retornar! Su hora de Retorno es a las {return_time_str}"

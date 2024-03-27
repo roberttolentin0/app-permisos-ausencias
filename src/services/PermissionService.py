@@ -1,4 +1,5 @@
 import traceback
+import pytz
 from datetime import datetime
 # Database
 from src.database.db_postgres import PGConnection
@@ -11,6 +12,9 @@ from src.models.PermissionDetailsModel import PermissionDetailsModel
 from src.services.PermissionDetailsService import PermissionDetailsService
 
 connectionDB = PGConnection()
+peru_timezone = pytz.timezone('America/Lima')
+def get_curr_time_peru():
+    return datetime.now(peru_timezone)
 
 
 class PermissionService():
@@ -135,7 +139,7 @@ class PermissionService():
                                  permission.status,
                                  permission.observation,
                                  permission.validator_id,
-                                 datetime.now()))
+                                 get_curr_time_peru()))
                 # Obtener el ID del nuevo registro insertado
                 id_creado = cursor.fetchone()[0]
                 connection.commit()
@@ -162,13 +166,13 @@ class PermissionService():
                     cursor.execute("""UPDATE public.permissions
                                         SET status=%s, observation=%s, validator_id='1', updated_at=%s
                                         WHERE id = %s;
-                                """,(status, observation, datetime.now(), id))
+                                """,(status, observation, get_curr_time_peru(), id))
                 else:
                     print('aceptar')
                     cursor.execute("""UPDATE public.permissions
                                     SET status=%s, validator_id='1', updated_at=%s
                                     WHERE id = %s;
-                                """,(status, datetime.now(), id))
+                                """,(status, get_curr_time_peru(), id))
 
                 affected_rows = cursor.rowcount
                 connection.commit()
@@ -183,12 +187,12 @@ class PermissionService():
         print('end_permission')
         try:
             connection = connectionDB.connect()
-            curr_time = datetime.now().strftime("%H:%M:%S")
+            curr_time =  get_curr_time_peru().strftime("%H:%M:%S")
             with connection.cursor() as cursor:
                 cursor.execute("""UPDATE public.permissions
                                         SET status='FINALIZADO', end_time=%s, validator_id='1', updated_at=%s
                                         WHERE id = %s;
-                                """,(curr_time, datetime.now(), id))
+                                """,(curr_time,  get_curr_time_peru(), id))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connectionDB.close()
@@ -207,7 +211,7 @@ class PermissionService():
                 cursor.execute("""UPDATE public.permissions
                                         SET status='EXTENDIDO', validator_id='1', updated_at=%s
                                         WHERE id = %s;
-                                """,(datetime.now(),  id_permission))
+                                """,( get_curr_time_peru(),  id_permission))
                 affected_rows = cursor.rowcount
                 if affected_rows == 1:
                     additional_permission = PermissionDetailsModel(None,  id_permission, new_reason, new_return_time)
@@ -233,13 +237,13 @@ class PermissionService():
             with connection.cursor() as cursor:
                 query =f"""
                             UPDATE public.permissions
-                            SET status='{status}', return_time='{new_return_time}', updated_at='{datetime.now()}'
+                            SET status='{status}', return_time='{new_return_time}', updated_at='{get_curr_time_peru()}'
                             WHERE id = {id};
                         """
                 if new_reason != '':
                     query =f"""
                                 UPDATE public.permissions
-                                SET status='{status}', return_time='{new_return_time}', reason='{new_reason}', updated_at='{datetime.now()}'
+                                SET status='{status}', return_time='{new_return_time}', reason='{new_reason}', updated_at='{get_curr_time_peru()}'
                                 WHERE id = {id};
                             """
                 cursor.execute(query)
